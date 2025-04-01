@@ -278,15 +278,6 @@ The SEC EDGAR MCP server acts as a middleman between an AI (MCP client) and the 
 
 **How it works**: The MCP client first queries the server's tool list (discovering functions like get_submissions, etc.). The AI can then decide to call a tool by name with appropriate parameters. The server receives the tools/call request, executes the corresponding EDGAR API call via secedgar, and returns the data. This response is sent back to the AI client in a structured JSON format that the AI can read and incorporate into its answer or reasoning.
 
-For a visual overview, consider the following diagram illustrating the data flow:
-
-```flowchart LR
-    A[**MCP Client** (LLM or Agent)] -- MCP JSON-RPC call --> B[🖥️ **SEC EDGAR MCP Server**]
-    B -- HTTPS request --> C[🗄️ **SEC EDGAR API** (SEC.gov)]
-    C -- JSON response --> B
-    B -- MCP result --> A
-```
-
 In essence, SEC EDGAR MCP bridges the gap between natural language questions and the raw SEC filings data. By adhering to MCP, it standardizes the way AI models can fetch real-world financial data, using officially sourced information for accurate and up-to-date answers.
 
 ## References 📚
