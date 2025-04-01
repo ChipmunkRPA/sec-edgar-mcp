@@ -12,6 +12,15 @@
   <img alt="Build Status" src="https://img.shields.io/badge/build-passing-brightgreen.svg" />
 </p>
 
+<div align="center">
+    <a href="https://www.loom.com/share/17fcd7d891fe496f9a6b8fb85ede66bb">
+      <img style="max-width:300px;" src="https://cdn.loom.com/sessions/thumbnails/17fcd7d891fe496f9a6b8fb85ede66bb-7f8590d1d4bcc2fb-full-play.gif">
+    </a>
+    <a href="https://www.loom.com/share/17fcd7d891fe496f9a6b8fb85ede66bb">
+      <p>SEC EDGAR MCP - Demo - Watch Video</p>
+    </a>
+</div>
+
 ## Introduction 📣
 
 SEC EDGAR MCP is an open-source MCP server that connects AI models to the rich dataset of SEC EDGAR filings. EDGAR (Electronic Data Gathering, Analysis, and Retrieval) is the U.S. SEC's primary system for companies to submit official filings. It contains millions of filings and "increases the efficiency, transparency, and fairness of the securities markets" by providing free public access to corporate financial information. This project makes that trove of public company data accessible to AI assistants (LLMs) for financial research, investment insights, and corporate transparency use cases.
