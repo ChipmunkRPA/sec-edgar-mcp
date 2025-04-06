@@ -23,9 +23,9 @@
 
 ## Introduction 📣
 
-SEC EDGAR MCP is an open-source MCP server that connects AI models to the rich dataset of SEC EDGAR filings. EDGAR (Electronic Data Gathering, Analysis, and Retrieval) is the U.S. SEC's primary system for companies to submit official filings. It contains millions of filings and "increases the efficiency, transparency, and fairness of the securities markets" by providing free public access to corporate financial information. This project makes that trove of public company data accessible to AI assistants (LLMs) for financial research, investment insights, and corporate transparency use cases.
+SEC EDGAR MCP is an open-source MCP server that connects AI models to the rich dataset of [SEC EDGAR filings](https://www.sec.gov/edgar). EDGAR (Electronic Data Gathering, Analysis, and Retrieval) is the U.S. SEC's primary system for companies to submit official filings. It contains millions of filings and "increases the efficiency, transparency, and fairness of the securities markets" by providing free public access to corporate financial information. This project makes that trove of public company data accessible to AI assistants (LLMs) for financial research, investment insights, and corporate transparency use cases.
 
-Using the Model Context Protocol (MCP) – an open standard that "enables seamless integration between LLM applications and external data sources and tools" – the SEC EDGAR MCP server exposes a set of tools backed by the official SEC EDGAR REST API. Under the hood, it leverages the Python secedgar SDK (an unofficial wrapper for SEC's API) to fetch data like company filings and financial facts. This means an AI agent can ask questions like "What's the latest 10-K filing for Apple?" or "Show me Tesla's total revenue in 2021" and the MCP server will retrieve the answer directly from EDGAR's official data.
+Using the [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) – an open standard that "enables seamless integration between LLM applications and external data sources and tools" – the SEC EDGAR MCP server exposes a set of tools backed by the official [SEC EDGAR REST API](https://www.sec.gov/edgar/sec-api-documentation). Under the hood, it leverages the [Python secedgar SDK](https://github.com/sec-edgar/sec-edgar) (an unofficial wrapper for SEC's API) to fetch data like company filings and financial facts. This means an AI agent can ask questions like "What's the latest 10-K filing for Apple?" or "Show me Tesla's total revenue in 2021" and the MCP server will retrieve the answer directly from EDGAR's official data.
 
 ## Usage 🚀
 
@@ -45,7 +45,7 @@ Follow these steps to set up and run the SEC EDGAR MCP server:
    cd sec-edgar-mcp
    ```
 
-2. **Install dependencies**: Ensure you have Python 3.9+ installed. Install the required packages, including the MCP framework and secedgar SDK:
+2. **Install dependencies**: Ensure you have [Python 3.9+](https://www.python.org/downloads/) installed. Install the required packages, including the [MCP framework](https://pypi.org/project/mcp/) and [secedgar SDK](https://pypi.org/project/sec-edgar/):
 
    ```bash
    pip install mcp secedgar
@@ -273,17 +273,17 @@ Example response (truncated):
 This example asks for the value of "Accounts Payable, Current" (in USD) for Q1 2019. The result includes an array of all companies that reported that metric at the end of Q1 2019, each with their CIK, name, and value. There were many companies (in this case, the frame returned 3388 data points). This is useful for broad analyses (e.g., finding industry totals or comparing peers), though an LLM would typically filter or request a specific company's data instead of retrieving thousands of entries at once.
 </details>
 
-> Note: The JSON structures above are directly returned from the SEC EDGAR API via the secedgar SDK. The MCP server does not alter the data, so you get the same fields as the official API. All tools require a valid CIK (Central Index Key) for company-specific queries – you can use the SEC's CIK lookup tool if you only know a ticker or name.
+> Note: The JSON structures above are directly returned from the SEC EDGAR API via the secedgar SDK. The MCP server does not alter the data, so you get the same fields as the official API. All tools require a valid CIK (Central Index Key) for company-specific queries – you can use the [SEC's CIK lookup tool](https://www.sec.gov/edgar/searchedgar/cik) if you only know a ticker or name.
 
 ## Architecture 🏗️
 
 The SEC EDGAR MCP server acts as a middleman between an AI (MCP client) and the SEC's EDGAR backend:
 
-- 🔸 **MCP Client**: Could be an AI assistant (like Claude or GPT-4 with an MCP plugin) or any app that speaks the MCP protocol. The client sends JSON-RPC requests to invoke tools (e.g. get_submissions) and receives JSON results.
+- 🔸 **MCP Client**: Could be an AI assistant (like [Claude](https://claude.ai/) or [GPT-4](https://openai.com/gpt-4) with an MCP plugin) or any app that speaks the MCP protocol. The client sends JSON-RPC requests to invoke tools (e.g. get_submissions) and receives JSON results.
 
-- 🔸 **MCP Server (SEC EDGAR MCP)**: This server (the project you are reading about) defines the EDGAR tools and handles incoming tool requests. When a request comes in, the server uses the secedgar Python SDK to call the SEC EDGAR REST API and then returns the response back over MCP.
+- 🔸 **MCP Server (SEC EDGAR MCP)**: This server (the project you are reading about) defines the EDGAR tools and handles incoming tool requests. When a request comes in, the server uses the [secedgar Python SDK](https://github.com/sec-edgar/sec-edgar) to call the SEC EDGAR REST API and then returns the response back over MCP.
 
-- 🔸 **SEC EDGAR REST API**: The official SEC endpoint (data.sec.gov) that provides EDGAR data in JSON format. The secedgar library communicates with this REST API, abiding by its usage policies (including rate limits and user agent identification).
+- 🔸 **SEC EDGAR REST API**: The official SEC endpoint ([data.sec.gov](https://data.sec.gov/)) that provides EDGAR data in JSON format. The secedgar library communicates with this REST API, abiding by its [usage policies](https://www.sec.gov/developer) (including rate limits and user agent identification).
 
 **How it works**: The MCP client first queries the server's tool list (discovering functions like get_submissions, etc.). The AI can then decide to call a tool by name with appropriate parameters. The server receives the tools/call request, executes the corresponding EDGAR API call via secedgar, and returns the data. This response is sent back to the AI client in a structured JSON format that the AI can read and incorporate into its answer or reasoning.
 
@@ -291,11 +291,11 @@ In essence, SEC EDGAR MCP bridges the gap between natural language questions and
 
 ## References 📚
 
-- **SEC EDGAR** – About EDGAR, SEC.gov (2024). EDGAR is the SEC's database for electronic company filings.
+- **[SEC EDGAR](https://www.sec.gov/edgar)** – About EDGAR, SEC.gov (2024). EDGAR is the SEC's database for electronic company filings.
 
-- **Model Context Protocol (MCP)** – Official documentation and SDKs. ModelContextProtocol.io – An open standard for connecting LLMs to tools.
+- **[Model Context Protocol (MCP)](https://modelcontextprotocol.io/)** – Official documentation and SDKs. ModelContextProtocol.io – An open standard for connecting LLMs to tools.
 
-- **SEC EDGAR API Python SDK (secedgar)** – sec-edgar-api by Jack D., an unofficial Python wrapper for SEC's EDGAR REST API. GitHub repo, Documentation.
+- **[SEC EDGAR API Python SDK (secedgar)](https://github.com/sec-edgar/sec-edgar)** – An unofficial Python wrapper for SEC's EDGAR REST API. [GitHub repo](https://github.com/sec-edgar/sec-edgar), [Documentation](https://sec-edgar.github.io/sec-edgar/).
 
 ## License ⚖️
 
