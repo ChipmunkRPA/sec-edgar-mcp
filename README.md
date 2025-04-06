@@ -59,7 +59,7 @@ Follow these steps to set up and run the SEC EDGAR MCP server:
 
 4. **Start the MCP server**: Launch the server to begin listening for MCP clients. For example:
    ```bash
-   python server.py
+   mcp install sec_edgar_mcp/server.py --env-file .env --name "SEC EDGAR MCP Server"
    ```
    Once running, the server will register its tools (see below) and await client connections. You should see logs indicating it's ready. 🎉
 
