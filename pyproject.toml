@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sec-edgar-mcp"
+version = "0.1.0"
+description = "SEC EDGAR MCP server for company filings and financial data"
+authors = [
+    {name = "Stefano Amorelli", email = "stefano@amorelli.tech"},
+]
+readme = "README.md"
+requires-python = ">=3.8"
+license = {text = "MIT"}
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+
+[project.urls]
+"Homepage" = "https://github.com/amorelli/sec-edgar-mcp"
+"Bug Tracker" = "https://github.com/amorelli/sec-edgar-mcp/issues"
+
+[tool.setuptools]
+package-dir = {"" = "."}
+packages = ["sec_edgar_mcp"]
