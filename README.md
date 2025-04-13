@@ -4,7 +4,6 @@
 
 </div>
 
-
 <p align="center">
   <img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-blue.svg" />
   <img alt="Python: 3.9+" src="https://img.shields.io/badge/python-3.9+-brightgreen.svg" />
@@ -13,14 +12,9 @@
   <a href="https://pypi.org/project/sec-edgar-mcp/"><img alt="PyPI" src="https://img.shields.io/pypi/v/sec-edgar-mcp.svg" /></a>
 </p>
 
-<div align="center">
-    <a href="https://www.loom.com/share/17fcd7d891fe496f9a6b8fb85ede66bb">
-      <img style="max-width:300px;" src="https://cdn.loom.com/sessions/thumbnails/17fcd7d891fe496f9a6b8fb85ede66bb-7f8590d1d4bcc2fb-full-play.gif">
-    </a>
-    <a href="https://www.loom.com/share/17fcd7d891fe496f9a6b8fb85ede66bb">
-      <p>SEC EDGAR MCP - Demo - Watch Video</p>
-    </a>
-</div>
+## Disclaimer 🚨
+
+> EDGAR® and SEC® are trademarks of the U.S. Securities and Exchange Commission. This open-source project is not affiliated with or approved by the U.S. Securities and Exchange Commission.
 
 ## Introduction 📣
 
@@ -34,35 +28,47 @@ Once the SEC EDGAR MCP server is running, you can connect to it with any MCP-com
 
 **Demo**: Here's a demonstration of an AI assistant using SEC EDGAR MCP to retrieve Apple's latest filings and financial facts (click to view the video):
 
-In the demo above, the assistant calls the get_submissions tool with Apple's CIK and then uses get_company_concepts to fetch a specific financial concept, showcasing how EDGAR data is retrieved and presented in real-time. 📊
+<div align="center">
+    <a href="https://www.loom.com/share/17fcd7d891fe496f9a6b8fb85ede66bb">
+      <img style="max-width:300px;" src="https://cdn.loom.com/sessions/thumbnails/17fcd7d891fe496f9a6b8fb85ede66bb-7f8590d1d4bcc2fb-full-play.gif">
+    </a>
+    <a href="https://www.loom.com/share/17fcd7d891fe496f9a6b8fb85ede66bb">
+      <p>SEC EDGAR MCP - Demo - Watch Video</p>
+    </a>
+</div>
+
+In the demo above, the assistant calls the `get_submissions` tool with Apple's CIK and then uses `get_company_concepts` to fetch a specific financial concept, showcasing how EDGAR data is retrieved and presented in real-time. 📊
 
 ## Installation 🛠
 
-Follow these steps to set up and run the SEC EDGAR MCP server:
+Follow these steps to set up and run the `SEC EDGAR MCP` server:
 
 1. **Clone the repository**:
-   ```bash
-   git clone https://github.com/yourusername/sec-edgar-mcp.git
-   cd sec-edgar-mcp
-   ```
+```bash
+git clone https://github.com/yourusername/sec-edgar-mcp.git
+cd sec-edgar-mcp
+```
 
 2. **Install dependencies**: Ensure you have [Python 3.9+](https://www.python.org/downloads/) installed. Install the required packages, including the [MCP framework](https://pypi.org/project/mcp/) and [secedgar SDK](https://pypi.org/project/sec-edgar/):
 
-   ```bash
-   pip install mcp secedgar
-   ```
+```bash
+pip install mcp secedgar
+```
 
 3. **Configure SEC EDGAR API access**: The SEC API requires a User-Agent string for all requests. Create a `.env` file in the project directory and add your user agent info:
-   ```
-   SEC_API_USER_AGENT="Your Name (your.email@domain.com)"
-   ```
-   This identifies your application to the SEC (replace with your details). The server will load this from the environment to authenticate to EDGAR.
+
+```
+SEC_API_USER_AGENT="Your Name (your.email@domain.com)"
+PYTHONPATH=/path/to/your/local/cloned/repo/sec-edgar-mcp
+```
+This identifies your application to the SEC (replace with your details). The server will load this from the environment to authenticate to EDGAR.
 
 4. **Start the MCP server**: Launch the server to begin listening for MCP clients. For example:
-   ```bash
-   mcp install sec_edgar_mcp/server.py --env-file .env --name "SEC EDGAR MCP Server"
-   ```
-   Once running, the server will register its tools (see below) and await client connections. You should see logs indicating it's ready. 🎉
+
+```bash
+mcp install sec_edgar_mcp/server.py --env-file .env --name "SEC EDGAR MCP Server" --with secedgar
+```
+Once running, the server will register its tools (see below) and await client connections. You should see logs indicating it's ready. 🎉
 
 Now the server is up and running, ready to serve EDGAR data to any MCP client! You can use the MCP CLI or an AI platform (e.g. Claude Desktop) to connect to localhost (or the appropriate transport) and start issuing tool calls.
 
@@ -82,7 +88,7 @@ Each tool is defined with a name, description, and input parameters. AI assistan
 
 Description: Returns the submission history for a given company, identified by its CIK. The response includes company info (name, ticker, etc.) and recent filings (forms, dates, report period, etc.). This is useful for getting a list of the latest filings (10-K, 10-Q, 8-K, etc.) a company has made.
 
-Example call (MCP JSON-RPC):
+Example call (`MCP` `JSON-RPC`):
 
 ```json
 {
@@ -116,7 +122,7 @@ Example response (truncated):
 }
 ```
 
-In this example, calling get_submissions for Apple (CIK 0000320193) returned a JSON with Apple's basic info and a list of its most recent 10-K and 10-Q filings (with their dates and document names, etc.).
+In this example, calling `get_submissions` for Apple (`CIK` `0000320193`) returned a `JSON` with Apple's basic info and a list of its most recent 10-K and 10-Q filings (with their dates and document names, etc.).
 </details>
 
 <details>
@@ -124,7 +130,7 @@ In this example, calling get_submissions for Apple (CIK 0000320193) returned a J
 
 Description: Fetches all reported values for a single financial concept (XBRL tag) for a given company. You must specify the company's CIK, the accounting taxonomy (e.g. us-gaap for U.S. GAAP financials), and the specific tag (concept name, e.g. AccountsPayableCurrent). The response includes metadata about that concept and a time-series of reported values (by year/quarter).
 
-Example call (MCP JSON-RPC):
+Example call (`MCP` `JSON-RPC`):
 
 ```json
 {
@@ -170,7 +176,7 @@ The above shows Apple's "Accounts Payable, Current" (us-gaap taxonomy) values in
 
 Description: Returns all available XBRL facts for a given company (by CIK). This is a comprehensive dataset of that company's financial facts, including multiple taxonomies (e.g. general company info in dei, financial statements in us-gaap, etc.). The response is a nested JSON grouping facts by taxonomy and then by individual tags, with arrays of values.
 
-Example call (MCP JSON-RPC):
+Example call (`MCP` `JSON-RPC`):
 
 ```json
 {
@@ -297,6 +303,7 @@ In essence, SEC EDGAR MCP bridges the gap between natural language questions and
 - **[Model Context Protocol (MCP)](https://modelcontextprotocol.io/)** – Official documentation and SDKs. ModelContextProtocol.io – An open standard for connecting LLMs to tools.
 
 - **[SEC EDGAR API Python SDK (secedgar)](https://github.com/sec-edgar/sec-edgar)** – An unofficial Python wrapper for SEC's EDGAR REST API. [GitHub repo](https://github.com/sec-edgar/sec-edgar), [Documentation](https://sec-edgar.github.io/sec-edgar/).
+
 
 ## License ⚖️
 
