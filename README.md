@@ -309,4 +309,7 @@ In essence, SEC EDGAR MCP bridges the gap between natural language questions and
 
 This project is licensed under the [MIT License](LICENSE). You are free to use, modify, and distribute it. See the LICENSE file for details.
 
-© 2025 Stefano Amorelli – Released under the MIT license. Enjoy! 🎉
+---
+
+© 2025 Stefano Amorelli – Released under the MIT license.  Enjoy! 🎉
+
