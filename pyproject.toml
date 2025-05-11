@@ -15,7 +15,6 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
-
 dependencies = ["mcp[cli]>=1.6.0", "secedgar"]
 
 [tool.setuptools]
