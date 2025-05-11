@@ -14,6 +14,7 @@
 
 ## Disclaimer 🚨
 
+> [!NOTE]
 > EDGAR® and SEC® are trademarks of the U.S. Securities and Exchange Commission. This open-source project is not affiliated with or approved by the U.S. Securities and Exchange Commission.
 
 ## Introduction 📣
