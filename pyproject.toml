@@ -1,5 +1,5 @@
 [build-system]
-requires = ["setuptools>=42", "wheel"]
+requires = ["setuptools>=61.0"]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -10,7 +10,7 @@ authors = [
     {name = "Stefano Amorelli", email = "stefano@amorelli.tech"},
 ]
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.10"
 license = {text = "MIT"}
 classifiers = [
     "Programming Language :: Python :: 3",
@@ -18,10 +18,11 @@ classifiers = [
     "Operating System :: OS Independent",
 ]
 
+dependencies = ["mcp[cli]>=1.6.0", "secedgar"]
+
+[tool.setuptools]
+packages = ["sec_edgar_mcp"]
+
 [project.urls]
 "Homepage" = "https://github.com/amorelli/sec-edgar-mcp"
 "Bug Tracker" = "https://github.com/amorelli/sec-edgar-mcp/issues"
-
-[tool.setuptools]
-package-dir = {"" = "."}
-packages = ["sec_edgar_mcp"]
