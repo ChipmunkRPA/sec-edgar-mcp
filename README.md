@@ -279,7 +279,8 @@ Example response (truncated):
 This example asks for the value of "Accounts Payable, Current" (in USD) for Q1 2019. The result includes an array of all companies that reported that metric at the end of Q1 2019, each with their CIK, name, and value. There were many companies (in this case, the frame returned 3388 data points). This is useful for broad analyses (e.g., finding industry totals or comparing peers), though an LLM would typically filter or request a specific company's data instead of retrieving thousands of entries at once.
 </details>
 
-> Note: The JSON structures above are directly returned from the SEC EDGAR API via the secedgar SDK. The MCP server does not alter the data, so you get the same fields as the official API. All tools require a valid CIK (Central Index Key) for company-specific queries – you can use the [SEC's CIK lookup tool](https://www.sec.gov/edgar/searchedgar/cik) if you only know a ticker or name.
+> [!NOTE]
+> The JSON structures above are directly returned from the SEC EDGAR API via the secedgar SDK. The MCP server does not alter the data, so you get the same fields as the official API. All tools require a valid CIK (Central Index Key) for company-specific queries – you can use the [SEC's CIK lookup tool](https://www.sec.gov/edgar/searchedgar/cik) if you only know a ticker or name.
 
 ## Architecture 🏗️
 
