@@ -21,5 +21,5 @@ dependencies = ["mcp[cli]>=1.6.0", "secedgar"]
 packages = ["sec_edgar_mcp"]
 
 [project.urls]
-"Homepage" = "https://github.com/amorelli/sec-edgar-mcp"
-"Bug Tracker" = "https://github.com/amorelli/sec-edgar-mcp/issues"
+"Homepage" = "https://github.com/stefanoamorelli/sec-edgar-mcp"
+"Bug Tracker" = "https://github.com/stefanoamorelli/sec-edgar-mcp/issues"
