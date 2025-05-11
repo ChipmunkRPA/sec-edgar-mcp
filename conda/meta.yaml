@@ -24,7 +24,7 @@ requirements:
 
 test:
   imports:
-    - sec_edagar_mcp
+    - sec_edgar_mcp
 
 about:
   home: https://github.com/stefanoamorelli/sec-edgar-mcp
