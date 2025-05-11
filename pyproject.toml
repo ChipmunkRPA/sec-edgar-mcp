@@ -6,9 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "sec-edgar-mcp"
 version = "0.1.0"
 description = "SEC EDGAR MCP server for company filings and financial data"
-authors = [
-    {name = "Stefano Amorelli", email = "stefano@amorelli.tech"},
-]
+authors = [{name = "Stefano Amorelli", email = "stefano@amorelli.tech"}]
 readme = "README.md"
 requires-python = ">=3.10"
 license = { file = "LICENSE" }
