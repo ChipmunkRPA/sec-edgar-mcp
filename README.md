@@ -12,7 +12,7 @@
   <a href="https://pypi.org/project/sec-edgar-mcp/"><img alt="PyPI" src="https://img.shields.io/pypi/v/sec-edgar-mcp.svg" /></a>
 </p>
 
-> [!NOTE]
+> [!IMPORTANT]
 > EDGAR® and SEC® are trademarks of the U.S. Securities and Exchange Commission. This open-source project is not affiliated with or approved by the U.S. Securities and Exchange Commission.
 
 ## Introduction 📣
@@ -20,6 +20,11 @@
 SEC EDGAR MCP is an open-source MCP server that connects AI models to the rich dataset of [SEC EDGAR filings](https://www.sec.gov/edgar). EDGAR (Electronic Data Gathering, Analysis, and Retrieval) is the U.S. SEC's primary system for companies to submit official filings. It contains millions of filings and "increases the efficiency, transparency, and fairness of the securities markets" by providing free public access to corporate financial information. This project makes that trove of public company data accessible to AI assistants (LLMs) for financial research, investment insights, and corporate transparency use cases.
 
 Using the [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) – an open standard that "enables seamless integration between LLM applications and external data sources and tools" – the SEC EDGAR MCP server exposes a set of tools backed by the official [SEC EDGAR REST API](https://www.sec.gov/edgar/sec-api-documentation). Under the hood, it leverages the [Python secedgar SDK](https://github.com/sec-edgar/sec-edgar) (an unofficial wrapper for SEC's API) to fetch data like company filings and financial facts. This means an AI agent can ask questions like "What's the latest 10-K filing for Apple?" or "Show me Tesla's total revenue in 2021" and the MCP server will retrieve the answer directly from EDGAR's official data.
+
+> [!TIP]
+> If you use this software, please cite it following [CITATION.cff](CITATION.cff), or the following APA entry:
+
+`Amorelli, S. (2025). SEC EDGAR MCP (Model Context Protocol) Server [Computer software]. GitHub. https://github.com/stefanoamorelli/sec-edgar-mcp`
 
 ## Usage 🚀
 
