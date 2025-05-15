@@ -12,8 +12,7 @@
   <a href="https://pypi.org/project/sec-edgar-mcp/"><img alt="PyPI" src="https://img.shields.io/pypi/v/sec-edgar-mcp.svg" /></a>
 </p>
 
-## Disclaimer 🚨
-
+> [!IMPORTANT]
 > EDGAR® and SEC® are trademarks of the U.S. Securities and Exchange Commission. This open-source project is not affiliated with or approved by the U.S. Securities and Exchange Commission.
 
 ## Introduction 📣
@@ -21,6 +20,11 @@
 SEC EDGAR MCP is an open-source MCP server that connects AI models to the rich dataset of [SEC EDGAR filings](https://www.sec.gov/edgar). EDGAR (Electronic Data Gathering, Analysis, and Retrieval) is the U.S. SEC's primary system for companies to submit official filings. It contains millions of filings and "increases the efficiency, transparency, and fairness of the securities markets" by providing free public access to corporate financial information. This project makes that trove of public company data accessible to AI assistants (LLMs) for financial research, investment insights, and corporate transparency use cases.
 
 Using the [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) – an open standard that "enables seamless integration between LLM applications and external data sources and tools" – the SEC EDGAR MCP server exposes a set of tools backed by the official [SEC EDGAR REST API](https://www.sec.gov/edgar/sec-api-documentation). Under the hood, it leverages the [Python secedgar SDK](https://github.com/sec-edgar/sec-edgar) (an unofficial wrapper for SEC's API) to fetch data like company filings and financial facts. This means an AI agent can ask questions like "What's the latest 10-K filing for Apple?" or "Show me Tesla's total revenue in 2021" and the MCP server will retrieve the answer directly from EDGAR's official data.
+
+> [!TIP]
+> If you use this software, please cite it following [CITATION.cff](CITATION.cff), or the following APA entry:
+
+`Amorelli, S. (2025). SEC EDGAR MCP (Model Context Protocol) Server [Computer software]. GitHub. https://github.com/stefanoamorelli/sec-edgar-mcp`
 
 ## Usage 🚀
 
@@ -280,7 +284,8 @@ Example response (truncated):
 This example asks for the value of "Accounts Payable, Current" (in USD) for Q1 2019. The result includes an array of all companies that reported that metric at the end of Q1 2019, each with their CIK, name, and value. There were many companies (in this case, the frame returned 3388 data points). This is useful for broad analyses (e.g., finding industry totals or comparing peers), though an LLM would typically filter or request a specific company's data instead of retrieving thousands of entries at once.
 </details>
 
-> Note: The JSON structures above are directly returned from the SEC EDGAR API via the secedgar SDK. The MCP server does not alter the data, so you get the same fields as the official API. All tools require a valid CIK (Central Index Key) for company-specific queries – you can use the [SEC's CIK lookup tool](https://www.sec.gov/edgar/searchedgar/cik) if you only know a ticker or name.
+> [!NOTE]
+> The JSON structures above are directly returned from the SEC EDGAR API via the secedgar SDK. The MCP server does not alter the data, so you get the same fields as the official API. All tools require a valid CIK (Central Index Key) for company-specific queries – you can use the [SEC's CIK lookup tool](https://www.sec.gov/edgar/searchedgar/cik) if you only know a ticker or name.
 
 ## Architecture 🏗️
 
