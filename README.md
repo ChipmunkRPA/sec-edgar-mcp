@@ -316,5 +316,5 @@ This project is licensed under the [MIT License](LICENSE). You are free to use, 
 
 ---
 
-© 2025 Stefano Amorelli – Released under the MIT license.  Enjoy! 🎉
+© 2025 [Stefano Amorelli](https://amorelli.tech) – Released under the [MIT license](LICENSE).  Enjoy! 🎉
 
