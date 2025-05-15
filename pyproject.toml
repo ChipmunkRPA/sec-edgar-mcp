@@ -15,10 +15,10 @@ classifiers = [
   "License :: OSI Approved :: MIT License",
   "Operating System :: OS Independent",
 ]
-dependencies = ["mcp[cli]>=1.6.0", "secedgar"]
-
-[tool.setuptools]
-packages = ["sec_edgar_mcp"]
+dependencies = [
+    "mcp[cli]>=1.7.1",
+    "secedgar==0.6.0a0",
+]
 
 [project.urls]
 "Homepage" = "https://github.com/stefanoamorelli/sec-edgar-mcp"
