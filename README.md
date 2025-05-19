@@ -12,6 +12,8 @@
   <a href="https://pypi.org/project/sec-edgar-mcp/"><img alt="PyPI" src="https://img.shields.io/pypi/v/sec-edgar-mcp.svg" /></a>
 </p>
 
+https://github.com/user-attachments/assets/d310eb42-b3ca-467d-92f7-7d132e6274fe
+
 > [!IMPORTANT]
 > EDGAR® and SEC® are trademarks of the U.S. Securities and Exchange Commission. This open-source project is not affiliated with or approved by the U.S. Securities and Exchange Commission.
 
