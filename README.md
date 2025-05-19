@@ -49,7 +49,7 @@ Follow these steps to set up and run the `SEC EDGAR MCP` server:
 
 1. **Clone the repository**:
 ```bash
-git clone https://github.com/yourusername/sec-edgar-mcp.git
+git clone https://github.com/stefanoamorelli/sec-edgar-mcp.git
 cd sec-edgar-mcp
 ```
 
