@@ -56,7 +56,8 @@ cd sec-edgar-mcp
 2. **Install dependencies**: Ensure you have [Python 3.9+](https://www.python.org/downloads/) installed. Install the required packages, including the [MCP framework](https://pypi.org/project/mcp/) and [secedgar SDK](https://pypi.org/project/sec-edgar/):
 
 ```bash
-pip install mcp secedgar
+uv init mcp 
+uv add "mcp[cli]"
 ```
 
 3. **Configure SEC EDGAR API access**: The SEC API requires a User-Agent string for all requests. Create a `.env` file in the project directory and add your user agent info:
@@ -70,7 +71,7 @@ This identifies your application to the SEC (replace with your details). The ser
 4. **Start the MCP server**: Launch the server to begin listening for MCP clients. For example:
 
 ```bash
-mcp install sec_edgar_mcp/server.py --env-file .env --name "SEC EDGAR MCP Server" --with secedgar==0.6.0a0
+uv run mcp install sec_edgar_mcp/server.py --env-file .env --name "SEC EDGAR MCP Server" --with secedgar==0.6.0a0
 ```
 Once running, the server will register its tools (see below) and await client connections. You should see logs indicating it's ready. 🎉
 
