@@ -17,6 +17,9 @@ classifiers = [
 ]
 dependencies = ["mcp[cli]>=1.7.1", "secedgar==0.6.0a0"]
 
+[tool.setuptools]
+packages = ["sec_edgar_mcp"]
+
 [project.urls]
 "Homepage" = "https://github.com/stefanoamorelli/sec-edgar-mcp"
 "Bug Tracker" = "https://github.com/stefanoamorelli/sec-edgar-mcp/issues"
