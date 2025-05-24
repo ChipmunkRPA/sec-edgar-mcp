@@ -65,7 +65,7 @@ uv add "mcp[cli]"
 3. **Configure SEC EDGAR API access**: The SEC API requires a User-Agent string for all requests. Create a `.env` file in the project directory and add your user agent info:
 
 ```
-SEC_API_USER_AGENT="Your Name (your.email@domain.com)"
+SEC_EDGAR_USER_AGENT="Your Name (your.email@domain.com)"
 PYTHONPATH=/path/to/your/local/cloned/repo/sec-edgar-mcp
 ```
 This identifies your application to the SEC (replace with your details). The server will load this from the environment to authenticate to EDGAR.
