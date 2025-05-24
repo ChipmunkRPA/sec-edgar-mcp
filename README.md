@@ -79,6 +79,17 @@ Once running, the server will register its tools (see below) and await client co
 
 Now the server is up and running, ready to serve EDGAR data to any MCP client! You can use the MCP CLI or an AI platform (e.g. Claude Desktop) to connect to localhost (or the appropriate transport) and start issuing tool calls.
 
+### Docker 🐳
+
+If you prefer using a container, a prebuilt image is available on Docker Hub. Pull the latest image and run it with your SEC EDGAR user agent:
+
+```bash
+docker pull stefanoamorelli/sec-edgar-mcp:latest
+docker run -e SEC_EDGAR_USER_AGENT="Your Name (your.email@domain.com)" stefanoamorelli/sec-edgar-mcp:latest
+```
+
+The container automatically launches the MCP server defined in `sec_edgar_mcp/server.py`, so once it starts you can connect to it just like the manual setup.
+
 ## Tools 🔧
 
 SEC EDGAR MCP exposes several tools (functions) from the SEC EDGAR API. These tools allow retrieval of different types of data:
