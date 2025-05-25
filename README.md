@@ -10,6 +10,7 @@
   <img alt="Platform: Windows | Mac | Linux" src="https://img.shields.io/badge/platform-Windows%20%7C%20Mac%20%7C%20Linux-lightgrey.svg" />
   <img alt="Build Status" src="https://img.shields.io/badge/build-passing-brightgreen.svg" />
   <a href="https://pypi.org/project/sec-edgar-mcp/"><img alt="PyPI" src="https://img.shields.io/pypi/v/sec-edgar-mcp.svg" /></a>
+  <a href="https://mseep.ai/app/0132880c-5e83-410b-a1d5-d3df08ed7b5c"><img alt="Verified on MseeP" src="https://mseep.ai/badge.svg" /></a>
 </p>
 
 https://github.com/user-attachments/assets/d310eb42-b3ca-467d-92f7-7d132e6274fe
