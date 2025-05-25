@@ -91,6 +91,20 @@ docker run -e SEC_EDGAR_USER_AGENT="Your Name (your.email@domain.com)" stefanoam
 
 The container automatically launches the MCP server defined in `sec_edgar_mcp/server.py`, so once it starts you can connect to it just like the manual setup.
 
+### Cline example
+
+See the [Cline documentation](https://docs.cline.bot/mcp-servers/configuring-mcp-servers#editing-mcp-settings-files)
+for instructions on managing MCP configuration.
+
+Provide Cline with the following information:
+
+```
+I want to add the MCP server for SEC EDGAR.
+Here's the GitHub link: @https://github.com/stefanoamorelli/sec-edgar-mcp
+Can you add it?
+```
+
+
 ## Tools 🔧
 
 SEC EDGAR MCP exposes several tools (functions) from the SEC EDGAR API. These tools allow retrieval of different types of data:
