@@ -60,9 +60,7 @@ def get_company_concepts_tool(
 
 
 @mcp.tool("get_company_facts")
-def get_company_facts_tool(
-    lookups: Union[str, List[str]], user_agent: str = sec_edgar_user_agent
-) -> Dict[str, dict]:
+def get_company_facts_tool(lookups: Union[str, List[str]], user_agent: str = sec_edgar_user_agent) -> Dict[str, dict]:
     """
     Retrieve all standardized financial facts for specified companies using the SEC EDGAR REST API.
 
