@@ -10,5 +10,20 @@ COPY . .
 # Ensure local package is discoverable
 ENV PYTHONPATH=/app
 
-# The server requires SEC_EDGAR_USER_AGENT to be set at runtime
-CMD ["mcp", "install", "sec_edgar_mcp/server.py", "--name", "SEC EDGAR MCP Server"]
+# The server requires NASDAQ_DATA_LINK_API_KEY to be set at runtime
+# Example mcpServers config for your client:
+# 
+# "mcpServers": {
+#   "sec-edgar-mcp": {
+#     "command": "docker",
+#     "args": [
+#       "run",
+#       "--rm",
+#       "-i",
+#       "-e", "SEC_EDGAR_USER_AGENT=<First Name, Last name (your@email.com)>",
+#       "stefanoamorelli/nasdaq-data-link-mcp:latest"
+#     ]
+#   }
+# }
+
+CMD ["python", "sec_edgar_mcp/server.py"]
