@@ -105,3 +105,7 @@ def get_xbrl_frames_tool(
         currency=currency,
         instantaneous=instantaneous,
     )
+
+
+if __name__ == "__main__":
+    mcp.run(transport="streamable-http")
