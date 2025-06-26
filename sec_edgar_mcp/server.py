@@ -1,3 +1,4 @@
+import argparse
 from typing import List, Union, Dict
 from secedgar.core.rest import (
     get_submissions,
@@ -108,4 +109,14 @@ def get_xbrl_frames_tool(
 
 
 if __name__ == "__main__":
-    mcp.run(transport="streamable-http")
+    parser = argparse.ArgumentParser(description="SEC EDGAR MCP Server")
+    parser.add_argument(
+        "--transport",
+        type=str,
+        default="stdio",
+        choices=["streamable-http", "sse", "stdio"],
+        help="Transport protocol to use (default: stdio)",
+    )
+    args = parser.parse_args()
+
+    mcp.run(transport=args.transport)
