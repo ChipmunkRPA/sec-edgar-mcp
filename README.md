@@ -48,7 +48,35 @@ In the demo above, the assistant calls the `get_submissions` tool with Apple's C
 
 ## Installation 🛠
 
-Follow these steps to set up and run the `SEC EDGAR MCP` server:
+### Docker 🐳 (strongly recommended)
+
+If you prefer using a container, a prebuilt image is available on Docker Hub. Pull the latest image and run it with your SEC EDGAR user agent:
+
+```bash
+docker pull stefanoamorelli/sec-edgar-mcp:latest
+```
+
+#### Claude Desktop Configuration
+
+To use with Claude Desktop, add the following configuration to your Claude Desktop MCP settings:
+
+```json
+"SEC Edgar MCP": {
+  "command": "docker",
+  "args": [
+    "run",
+    "-i",
+    "--network=host",
+    "-e",
+    "SEC_EDGAR_USER_AGENT=<YOUR NAME> (<YOUR EMAIL>)",
+    "stefanoamorelli/sec-edgar-mcp:latest"
+  ]
+}
+```
+
+### Local Installation 
+
+Follow these steps to set up and run the `SEC EDGAR MCP` server without docker:
 
 1. **Clone the repository**:
 ```bash
@@ -80,32 +108,6 @@ Once running, the server will register its tools (see below) and await client co
 
 Now the server is up and running, ready to serve EDGAR data to any MCP client! You can use the MCP CLI or an AI platform (e.g. Claude Desktop) to connect to localhost (or the appropriate transport) and start issuing tool calls.
 
-### Docker 🐳
-
-If you prefer using a container, a prebuilt image is available on Docker Hub. Pull the latest image and run it with your SEC EDGAR user agent:
-
-```bash
-docker pull stefanoamorelli/sec-edgar-mcp:latest
-```
-
-#### Claude Desktop Configuration
-
-To use with Claude Desktop, add the following configuration to your Claude Desktop MCP settings:
-
-```json
-"SEC Edgar MCP": {
-  "command": "docker",
-  "args": [
-    "run",
-    "-i",
-    "--network=host",
-    "-e",
-    "SEC_EDGAR_USER_AGENT=<YOUR NAME> (<YOUR EMAIL>)",
-    "stefanoamorelli/sec-edgar-mcp:latest"
-  ]
-}
-```
-
 ### Cline example
 
 See the [Cline documentation](https://docs.cline.bot/mcp-servers/configuring-mcp-servers#editing-mcp-settings-files)
@@ -119,7 +121,6 @@ Here's the GitHub link: @https://github.com/stefanoamorelli/sec-edgar-mcp
 Can you add it?
 ```
 
-
 ## Tools 🔧
 
 SEC EDGAR MCP exposes several tools (functions) from the SEC EDGAR API. These tools allow retrieval of different types of data:
@@ -128,6 +129,7 @@ SEC EDGAR MCP exposes several tools (functions) from the SEC EDGAR API. These to
 - **Company Concept** – detailed data for a specific financial concept (XBRL tag) for a company.
 - **Company Facts** – all available financial facts for a company.
 - **XBRL Frames** – aggregated data for a financial concept across companies or time frames.
+- **Document Content Tools** – retrieve and analyze full filing documents with intelligent chunking.
 
 Each tool is defined with a name, description, and input parameters. AI assistants can invoke them via MCP's JSON-RPC interface. Below is a list of the tools with details and examples of how to call them (click to expand):
 
@@ -328,8 +330,120 @@ Example response (truncated):
 This example asks for the value of "Accounts Payable, Current" (in USD) for Q1 2019. The result includes an array of all companies that reported that metric at the end of Q1 2019, each with their CIK, name, and value. There were many companies (in this case, the frame returned 3388 data points). This is useful for broad analyses (e.g., finding industry totals or comparing peers), though an LLM would typically filter or request a specific company's data instead of retrieving thousands of entries at once.
 </details>
 
+<details>
+<summary><strong>📄 get_filing_document</strong> – Retrieve full document content</summary>
+
+Description: Fetches the complete content of a filing document in text format. This tool retrieves the raw text content from SEC filings, with optional HTML markup removal for cleaner analysis. Useful for getting the full document when you need complete access to all sections.
+
+Example call (MCP JSON-RPC):
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 5,
+  "method": "tools/call",
+  "params": {
+    "name": "get_filing_document",
+    "arguments": {
+      "cik": "0000320193",
+      "accession_number": "0000320193-23-000106",
+      "document_name": "aapl-20230930_10k.htm"
+    }
+  }
+}
+```
+
+This tool returns the complete document text, which can be quite large for 10-K filings (often 100K+ characters).
+</details>
+
+<details>
+<summary><strong>📑 get_filing_sections</strong> – Extract document sections with summary</summary>
+
+Description: Analyzes a filing document and extracts all recognizable sections with metadata. Returns a structured overview of the document including section names, types, word counts, and character counts. This is perfect for understanding document structure before diving into specific sections.
+
+Example call (MCP JSON-RPC):
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 6,
+  "method": "tools/call",
+  "params": {
+    "name": "get_filing_sections",
+    "arguments": {
+      "cik": "0000320193",
+      "accession_number": "0000320193-23-000106",
+      "document_name": "aapl-20230930_10k.htm"
+    }
+  }
+}
+```
+
+Returns a summary with total sections, total characters, and detailed information about each section including Item 1 (Business), Item 1A (Risk Factors), etc.
+</details>
+
+<details>
+<summary><strong>📖 get_filing_section_content</strong> – Get specific section content with chunking</summary>
+
+Description: Retrieves content from a specific section of a filing document with intelligent chunking support. You can specify the section type (e.g., "item_1" for Business section) and get the content split into manageable chunks. Supports navigation through large sections.
+
+Example call (MCP JSON-RPC):
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 7,
+  "method": "tools/call",
+  "params": {
+    "name": "get_filing_section_content",
+    "arguments": {
+      "cik": "0000320193",
+      "accession_number": "0000320193-23-000106",
+      "document_name": "aapl-20230930_10k.htm",
+      "section_type": "item_1",
+      "chunk_size": 8000,
+      "chunk_index": 0
+    }
+  }
+}
+```
+
+Returns the specified chunk with metadata about total chunks available, section summary, and navigation information.
+</details>
+
+<details>
+<summary><strong>🔄 stream_filing_chunks</strong> – Stream document chunks with pagination</summary>
+
+Description: Provides paginated access to filing document content by streaming chunks. Ideal for processing very large documents systematically. You can specify starting chunk, maximum chunks per request, and chunk size. Includes pagination metadata for navigation.
+
+Example call (MCP JSON-RPC):
+
+```json
+{
+  "jsonrpc": "2.0",
+  "id": 8,
+  "method": "tools/call",
+  "params": {
+    "name": "stream_filing_chunks",
+    "arguments": {
+      "cik": "0000320193",
+      "accession_number": "0000320193-23-000106",
+      "document_name": "aapl-20230930_10k.htm",
+      "chunk_size": 6000,
+      "start_chunk": 0,
+      "max_chunks": 3
+    }
+  }
+}
+```
+
+Returns multiple chunks with pagination information, allowing you to process large documents incrementally without overwhelming context limits.
+</details>
+
 > [!NOTE]
 > The JSON structures above are directly returned from the SEC EDGAR API via the secedgar SDK. The MCP server does not alter the data, so you get the same fields as the official API. All tools require a valid CIK (Central Index Key) for company-specific queries – you can use the [SEC's CIK lookup tool](https://www.sec.gov/edgar/searchedgar/cik) if you only know a ticker or name.
+> 
+> **New Document Tools**: The document content tools introduced in v0.2.0 provide intelligent chunking and section extraction for large SEC filings. See [USAGE_EXAMPLES.md](USAGE_EXAMPLES.md) for detailed examples and workflows.
 
 ## Architecture 🏗️
 
