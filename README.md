@@ -86,10 +86,25 @@ If you prefer using a container, a prebuilt image is available on Docker Hub. Pu
 
 ```bash
 docker pull stefanoamorelli/sec-edgar-mcp:latest
-docker run -e SEC_EDGAR_USER_AGENT="Your Name (your.email@domain.com)" stefanoamorelli/sec-edgar-mcp:latest
 ```
 
-The container automatically launches the MCP server defined in `sec_edgar_mcp/server.py`, so once it starts you can connect to it just like the manual setup.
+#### Claude Desktop Configuration
+
+To use with Claude Desktop, add the following configuration to your Claude Desktop MCP settings:
+
+```json
+"SEC Edgar MCP": {
+  "command": "docker",
+  "args": [
+    "run",
+    "-i",
+    "--network=host",
+    "-e",
+    "SEC_EDGAR_USER_AGENT=<YOUR NAME> (<YOUR EMAIL>)",
+    "stefanoamorelli/sec-edgar-mcp:latest"
+  ]
+}
+```
 
 ### Cline example
 
