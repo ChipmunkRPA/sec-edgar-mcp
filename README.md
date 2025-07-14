@@ -74,6 +74,8 @@ To use with Claude Desktop, add the following configuration to your Claude Deskt
 }
 ```
 
+You can now start Claude Desktop and start using the SEC EDGAR MCP server.
+
 ### Local Installation 
 
 Follow these steps to set up and run the `SEC EDGAR MCP` server without docker:
