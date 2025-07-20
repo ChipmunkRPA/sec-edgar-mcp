@@ -6,6 +6,7 @@ from datetime import datetime
 @dataclass
 class CompanyInfo:
     """Company information model."""
+
     cik: str
     name: str
     ticker: Optional[str] = None
@@ -14,7 +15,7 @@ class CompanyInfo:
     exchange: Optional[str] = None
     state: Optional[str] = None
     fiscal_year_end: Optional[str] = None
-    
+
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary."""
         return {
@@ -32,6 +33,7 @@ class CompanyInfo:
 @dataclass
 class FilingInfo:
     """Filing information model."""
+
     accession_number: str
     filing_date: datetime
     form_type: str
@@ -41,7 +43,7 @@ class FilingInfo:
     acceptance_datetime: Optional[datetime] = None
     period_of_report: Optional[datetime] = None
     items: Optional[List[str]] = None
-    
+
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary."""
         return {
@@ -60,6 +62,7 @@ class FilingInfo:
 @dataclass
 class TransactionInfo:
     """Transaction information model for insider filings."""
+
     transaction_date: datetime
     security_title: str
     transaction_type: str
@@ -69,7 +72,7 @@ class TransactionInfo:
     ownership_type: Optional[str] = None
     owner_name: Optional[str] = None
     owner_title: Optional[str] = None
-    
+
     def to_dict(self) -> Dict[str, Any]:
         """Convert to dictionary."""
         return {

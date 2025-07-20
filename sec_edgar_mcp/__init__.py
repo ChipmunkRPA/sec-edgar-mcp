@@ -10,13 +10,11 @@ __all__ = [
     "CompanyInfo",
     "FilingInfo",
     "TransactionInfo",
-    
     # Tools
     "CompanyTools",
     "FilingsTools",
     "FinancialTools",
     "InsiderTools",
-    
     # Utils
     "TickerCache",
     "SEC_USER_AGENT",
