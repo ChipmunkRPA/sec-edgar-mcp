@@ -22,16 +22,18 @@ https://github.com/user-attachments/assets/d310eb42-b3ca-467d-92f7-7d132e6274fe
 
 SEC EDGAR MCP is an open-source MCP server that connects AI models to the rich dataset of [SEC EDGAR filings](https://www.sec.gov/edgar). EDGAR (Electronic Data Gathering, Analysis, and Retrieval) is the U.S. SEC's primary system for companies to submit official filings. It contains millions of filings and "increases the efficiency, transparency, and fairness of the securities markets" by providing free public access to corporate financial information. This project makes that trove of public company data accessible to AI assistants (LLMs) for financial research, investment insights, and corporate transparency use cases.
 
-Using the [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) – an open standard that "enables seamless integration between LLM applications and external data sources and tools" – the SEC EDGAR MCP server exposes a set of tools backed by the official [SEC EDGAR REST API](https://www.sec.gov/edgar/sec-api-documentation). Under the hood, it leverages the [Python secedgar SDK](https://github.com/sec-edgar/sec-edgar) (an unofficial wrapper for SEC's API) to fetch data like company filings and financial facts. This means an AI agent can ask questions like "What's the latest 10-K filing for Apple?" or "Show me Tesla's total revenue in 2021" and the MCP server will retrieve the answer directly from EDGAR's official data.
+Using the [Model Context Protocol (MCP)](https://modelcontextprotocol.io/) – an open standard that "enables seamless integration between LLM applications and external data sources and tools" – the SEC EDGAR MCP server exposes a comprehensive set of tools for accessing SEC filing data. Under the hood, it leverages the [EdgarTools Python library](https://github.com/dgunning/edgartools) to fetch data from official SEC sources and performs direct XBRL parsing for exact financial precision. This means an AI agent can ask questions like "What's the latest 10-K filing for Apple?" or "Show me Tesla's exact revenue from their latest 10-K" and the MCP server will retrieve the answer directly from EDGAR's official data with complete accuracy and filing references.
 
 > [!TIP]
 > If you use this software, please cite it following [CITATION.cff](CITATION.cff), or the following APA entry:
 
-`Amorelli, S. (2025). SEC EDGAR MCP (Model Context Protocol) Server [Computer software]. GitHub. https://github.com/stefanoamorelli/sec-edgar-mcp`
+`Amorelli, Stefano (2025). SEC EDGAR MCP (Model Context Protocol) Server [Computer software]. GitHub. https://github.com/stefanoamorelli/sec-edgar-mcp`
 
 ## Usage 🚀
 
 Once the SEC EDGAR MCP server is running, you can connect to it with any MCP-compatible client (such as an AI assistant or the MCP CLI tool). The client will discover the available EDGAR tools and can invoke them to get real-time data from SEC filings. For example, an AI assistant could use this server to fetch a company's recent filings or query specific financial metrics without manual web searching.
+
+For comprehensive guides, examples, and tool documentation, visit the [SEC EDGAR MCP Documentation](https://sec-edgar-mcp.amorelli.tech/).
 
 **Demo**: Here's a demonstration of an AI assistant using SEC EDGAR MCP to retrieve Apple's latest filings and financial facts (click to view the video):
 
@@ -44,422 +46,36 @@ Once the SEC EDGAR MCP server is running, you can connect to it with any MCP-com
     </a>
 </div>
 
-In the demo above, the assistant calls the `get_submissions` tool with Apple's CIK and then uses `get_company_concepts` to fetch a specific financial concept, showcasing how EDGAR data is retrieved and presented in real-time. 📊
+In the demo above, the assistant uses SEC EDGAR MCP tools to retrieve Apple's filings and financial data, showcasing how EDGAR information is fetched and presented in real-time with exact precision and filing references. 📊
 
-## Installation 🛠
+## Documentation 📚
 
-### Docker 🐳 (strongly recommended)
-
-If you prefer using a container, a prebuilt image is available on Docker Hub. Pull the latest image and run it with your SEC EDGAR user agent:
-
-```bash
-docker pull stefanoamorelli/sec-edgar-mcp:latest
-```
-
-#### Claude Desktop Configuration
-
-To use with Claude Desktop, add the following configuration to your Claude Desktop MCP settings:
-
-```json
-"SEC Edgar MCP": {
-  "command": "docker",
-  "args": [
-    "run",
-    "-i",
-    "--network=host",
-    "-e",
-    "SEC_EDGAR_USER_AGENT=<YOUR NAME> (<YOUR EMAIL>)",
-    "stefanoamorelli/sec-edgar-mcp:latest"
-  ]
-}
-```
-
-You can now start Claude Desktop and start using the SEC EDGAR MCP server.
-
-### Local Installation 
-
-Follow these steps to set up and run the `SEC EDGAR MCP` server without docker:
-
-1. **Clone the repository**:
-```bash
-git clone https://github.com/stefanoamorelli/sec-edgar-mcp.git
-cd sec-edgar-mcp
-```
-
-2. **Install dependencies**: Ensure you have [Python 3.9+](https://www.python.org/downloads/) installed. Install the required packages, including the [MCP framework](https://pypi.org/project/mcp/) and [secedgar SDK](https://pypi.org/project/sec-edgar/):
-
-```bash
-uv init mcp 
-uv add "mcp[cli]"
-```
-
-3. **Configure SEC EDGAR API access**: The SEC API requires a User-Agent string for all requests. Create a `.env` file in the project directory and add your user agent info:
-
-```
-SEC_EDGAR_USER_AGENT="Your Name (your.email@domain.com)"
-PYTHONPATH=/path/to/your/local/cloned/repo/sec-edgar-mcp
-```
-This identifies your application to the SEC (replace with your details). The server will load this from the environment to authenticate to EDGAR.
-
-4. **Start the MCP server**: Launch the server to begin listening for MCP clients. For example:
-
-```bash
-uv run mcp install sec_edgar_mcp/server.py --env-file .env --name "SEC EDGAR MCP Server" --with secedgar==0.6.0a0
-```
-Once running, the server will register its tools (see below) and await client connections. You should see logs indicating it's ready. 🎉
-
-Now the server is up and running, ready to serve EDGAR data to any MCP client! You can use the MCP CLI or an AI platform (e.g. Claude Desktop) to connect to localhost (or the appropriate transport) and start issuing tool calls.
-
-### Cline example
-
-See the [Cline documentation](https://docs.cline.bot/mcp-servers/configuring-mcp-servers#editing-mcp-settings-files)
-for instructions on managing MCP configuration.
-
-Provide Cline with the following information:
-
-```
-I want to add the MCP server for SEC EDGAR.
-Here's the GitHub link: @https://github.com/stefanoamorelli/sec-edgar-mcp
-Can you add it?
-```
-
-## Tools 🔧
-
-SEC EDGAR MCP exposes several tools (functions) from the SEC EDGAR API. These tools allow retrieval of different types of data:
-
-- **Company Submissions** – recent filings and metadata for a company (by CIK).
-- **Company Concept** – detailed data for a specific financial concept (XBRL tag) for a company.
-- **Company Facts** – all available financial facts for a company.
-- **XBRL Frames** – aggregated data for a financial concept across companies or time frames.
-- **Document Content Tools** – retrieve and analyze full filing documents with intelligent chunking.
-
-Each tool is defined with a name, description, and input parameters. AI assistants can invoke them via MCP's JSON-RPC interface. Below is a list of the tools with details and examples of how to call them (click to expand):
-
-<details>
-<summary><strong>📁 get_submissions</strong> – Fetch a company's submissions (filings history)</summary>
-
-Description: Returns the submission history for a given company, identified by its CIK. The response includes company info (name, ticker, etc.) and recent filings (forms, dates, report period, etc.). This is useful for getting a list of the latest filings (10-K, 10-Q, 8-K, etc.) a company has made.
-
-Example call (`MCP` `JSON-RPC`):
-
-```json
-{
-  "jsonrpc": "2.0",
-  "id": 42,
-  "method": "tools/call",
-  "params": {
-    "name": "get_submissions",
-    "arguments": { "cik": "0000320193" }
-  }
-}
-```
-
-Example response (truncated):
-
-```json
-{
-  "cik": "0000320193",
-  "name": "Apple Inc.",
-  "tickers": ["AAPL"],
-  "exchanges": ["Nasdaq"],
-  "filings": {
-    "recent": {
-      "form": ["10-K", "10-Q", ...],
-      "filingDate": ["2023-10-26", "2023-07-27", ...],
-      "reportDate": ["2023-09-30", "2023-06-30", ...],
-      "primaryDocument": ["aapl-2023-10k.htm", "aapl-2023-q3.htm", ...],
-      ...
-    }
-  }
-}
-```
-
-In this example, calling `get_submissions` for Apple (`CIK` `0000320193`) returned a `JSON` with Apple's basic info and a list of its most recent 10-K and 10-Q filings (with their dates and document names, etc.).
-</details>
-
-<details>
-<summary><strong>💡 get_company_concepts</strong> – Get a specific reported concept for a company</summary>
-
-Description: Fetches all reported values for a single financial concept (XBRL tag) for a given company. You must specify the company's CIK, the accounting taxonomy (e.g. us-gaap for U.S. GAAP financials), and the specific tag (concept name, e.g. AccountsPayableCurrent). The response includes metadata about that concept and a time-series of reported values (by year/quarter).
-
-Example call (`MCP` `JSON-RPC`):
-
-```json
-{
-  "jsonrpc": "2.0",
-  "id": 1,
-  "method": "tools/call",
-  "params": {
-    "name": "get_company_concepts",
-    "arguments": {
-      "cik": "0000320193",
-      "taxonomy": "us-gaap",
-      "tag": "AccountsPayableCurrent"
-    }
-  }
-}
-```
-
-Example response (truncated):
-
-```json
-{
-  "cik": 320193,
-  "taxonomy": "us-gaap",
-  "tag": "AccountsPayableCurrent",
-  "label": "Accounts Payable, Current",
-  "description": "The carrying value of accounts payable as of the balance sheet date.",
-  "entityName": "Apple Inc.",
-  "units": {
-    "USD": [
-      { "end": "2022-09-24", "val": 64220000000, ... },
-      { "end": "2021-09-25", "val": 54763000000, ... },
-      ...
-    ]
-  }
-}
-```
-
-The above shows Apple's "Accounts Payable, Current" (us-gaap taxonomy) values in USD for recent year-end dates. Each entry under units -> USD includes the period end date and the value reported. This tool lets an AI retrieve specific line-items from a company's financial statements as reported in their filings.
-</details>
-
-<details>
-<summary><strong>🗃️ get_company_facts</strong> – Retrieve all facts for a company (full XBRL fact set)</summary>
-
-Description: Returns all available XBRL facts for a given company (by CIK). This is a comprehensive dataset of that company's financial facts, including multiple taxonomies (e.g. general company info in dei, financial statements in us-gaap, etc.). The response is a nested JSON grouping facts by taxonomy and then by individual tags, with arrays of values.
-
-Example call (`MCP` `JSON-RPC`):
-
-```json
-{
-  "jsonrpc": "2.0",
-  "id": 2,
-  "method": "tools/call",
-  "params": {
-    "name": "get_company_facts",
-    "arguments": { "cik": "0000320193" }
-  }
-}
-```
-
-Example response (truncated):
-
-```json
-{
-  "cik": 320193,
-  "entityName": "Apple Inc.",
-  "facts": {
-    "dei": {
-      "EntityCommonStockSharesOutstanding": {
-        "label": "Entity Common Stock, Shares Outstanding",
-        "units": { "shares": [ ... ] }
-      },
-      "EntityPublicFloat": {
-        "label": "Entity Public Float",
-        "units": { "USD": [ ... ] }
-      },
-      ...
-    },
-    "us-gaap": {
-      "AccountsPayableCurrent": {
-        "label": "Accounts Payable, Current",
-        "units": { "USD": [ { "end": "2022-09-24", "val": 64220000000 }, ... ] }
-      },
-      "AccountsReceivableNet": {
-        "label": "Accounts Receivable, Net",
-        "units": { "USD": [ ... ] }
-      },
-      ...
-    }
-  }
-}
-```
-
-This truncated example shows the structure of get_company_facts output for Apple. It includes dei facts (like shares outstanding) and us-gaap financial facts (like Accounts Payable, Accounts Receivable, etc.), each with their values. An AI could use this to pull a range of data points from a company's filings in one call (though often it's more data than needed, so targeting a specific concept with get_company_concepts is preferable for focused questions).
-</details>
-
-<details>
-<summary><strong>🌐 get_xbrl_frames</strong> – Query XBRL "frames" (data across entities or time)</summary>
-
-Description: Retrieves data for a given financial concept across all companies or a set time frame. In EDGAR's API, a "frame" is essentially an aggregation for a specific tag, unit, and period (for example, all companies' values for Revenue in Q1 2023). You need to specify the taxonomy, tag, unit (e.g. USD), year, and period (annual or quarter). This tool returns a list of data points from all entities that reported that concept in that period.
-
-Example call (MCP JSON-RPC):
-
-```json
-{
-  "jsonrpc": "2.0",
-  "id": 3,
-  "method": "tools/call",
-  "params": {
-    "name": "get_xbrl_frames",
-    "arguments": {
-      "taxonomy": "us-gaap",
-      "tag": "AccountsPayableCurrent",
-      "unit": "USD",
-      "year": 2019,
-      "quarter": 1
-    }
-  }
-}
-```
-
-Example response (truncated):
-
-```json
-{
-  "taxonomy": "us-gaap",
-  "tag": "AccountsPayableCurrent",
-  "uom": "USD",
-  "ccp": "CY2019Q1I",  <!-- Calendar Year 2019, Q1, Instantaneous -->
-  "data": [
-    {
-      "cik": 1555538,
-      "entityName": "SUNCOKE ENERGY PARTNERS, L.P.",
-      "end": "2019-03-31",
-      "val": 78300000
-    },
-    {
-      "cik": 11199,
-      "entityName": "BEMIS CO INC",
-      "end": "2019-03-31",
-      "val": 465700000
-    },
-    ... (thousands more data points) ...
-  ]
-}
-```
-
-This example asks for the value of "Accounts Payable, Current" (in USD) for Q1 2019. The result includes an array of all companies that reported that metric at the end of Q1 2019, each with their CIK, name, and value. There were many companies (in this case, the frame returned 3388 data points). This is useful for broad analyses (e.g., finding industry totals or comparing peers), though an LLM would typically filter or request a specific company's data instead of retrieving thousands of entries at once.
-</details>
-
-<details>
-<summary><strong>📄 get_filing_document</strong> – Retrieve full document content</summary>
-
-Description: Fetches the complete content of a filing document in text format. This tool retrieves the raw text content from SEC filings, with optional HTML markup removal for cleaner analysis. Useful for getting the full document when you need complete access to all sections.
-
-Example call (MCP JSON-RPC):
-
-```json
-{
-  "jsonrpc": "2.0",
-  "id": 5,
-  "method": "tools/call",
-  "params": {
-    "name": "get_filing_document",
-    "arguments": {
-      "cik": "0000320193",
-      "accession_number": "0000320193-23-000106",
-      "document_name": "aapl-20230930_10k.htm"
-    }
-  }
-}
-```
-
-This tool returns the complete document text, which can be quite large for 10-K filings (often 100K+ characters).
-</details>
-
-<details>
-<summary><strong>📑 get_filing_sections</strong> – Extract document sections with summary</summary>
-
-Description: Analyzes a filing document and extracts all recognizable sections with metadata. Returns a structured overview of the document including section names, types, word counts, and character counts. This is perfect for understanding document structure before diving into specific sections.
-
-Example call (MCP JSON-RPC):
-
-```json
-{
-  "jsonrpc": "2.0",
-  "id": 6,
-  "method": "tools/call",
-  "params": {
-    "name": "get_filing_sections",
-    "arguments": {
-      "cik": "0000320193",
-      "accession_number": "0000320193-23-000106",
-      "document_name": "aapl-20230930_10k.htm"
-    }
-  }
-}
-```
-
-Returns a summary with total sections, total characters, and detailed information about each section including Item 1 (Business), Item 1A (Risk Factors), etc.
-</details>
-
-<details>
-<summary><strong>📖 get_filing_section_content</strong> – Get specific section content with chunking</summary>
-
-Description: Retrieves content from a specific section of a filing document with intelligent chunking support. You can specify the section type (e.g., "item_1" for Business section) and get the content split into manageable chunks. Supports navigation through large sections.
-
-Example call (MCP JSON-RPC):
-
-```json
-{
-  "jsonrpc": "2.0",
-  "id": 7,
-  "method": "tools/call",
-  "params": {
-    "name": "get_filing_section_content",
-    "arguments": {
-      "cik": "0000320193",
-      "accession_number": "0000320193-23-000106",
-      "document_name": "aapl-20230930_10k.htm",
-      "section_type": "item_1",
-      "chunk_size": 8000,
-      "chunk_index": 0
-    }
-  }
-}
-```
-
-Returns the specified chunk with metadata about total chunks available, section summary, and navigation information.
-</details>
-
-<details>
-<summary><strong>🔄 stream_filing_chunks</strong> – Stream document chunks with pagination</summary>
-
-Description: Provides paginated access to filing document content by streaming chunks. Ideal for processing very large documents systematically. You can specify starting chunk, maximum chunks per request, and chunk size. Includes pagination metadata for navigation.
-
-Example call (MCP JSON-RPC):
-
-```json
-{
-  "jsonrpc": "2.0",
-  "id": 8,
-  "method": "tools/call",
-  "params": {
-    "name": "stream_filing_chunks",
-    "arguments": {
-      "cik": "0000320193",
-      "accession_number": "0000320193-23-000106",
-      "document_name": "aapl-20230930_10k.htm",
-      "chunk_size": 6000,
-      "start_chunk": 0,
-      "max_chunks": 3
-    }
-  }
-}
-```
-
-Returns multiple chunks with pagination information, allowing you to process large documents incrementally without overwhelming context limits.
-</details>
-
-> [!NOTE]
-> The JSON structures above are directly returned from the SEC EDGAR API via the secedgar SDK. The MCP server does not alter the data, so you get the same fields as the official API. All tools require a valid CIK (Central Index Key) for company-specific queries – you can use the [SEC's CIK lookup tool](https://www.sec.gov/edgar/searchedgar/cik) if you only know a ticker or name.
-> 
-> **New Document Tools**: The document content tools introduced in v0.2.0 provide intelligent chunking and section extraction for large SEC filings. See [USAGE_EXAMPLES.md](USAGE_EXAMPLES.md) for detailed examples and workflows.
+For installation and setup instructions, visit the [SEC EDGAR MCP Quickstart Guide](https://sec-edgar-mcp.amorelli.tech/setup/quickstart). For complete tool documentation, usage examples, and configuration guides, visit the [SEC EDGAR MCP Documentation](https://sec-edgar-mcp.amorelli.tech/).
 
 ## Architecture 🏗️
 
 The SEC EDGAR MCP server acts as a middleman between an AI (MCP client) and the SEC's EDGAR backend:
 
-- 🔸 **MCP Client**: Could be an AI assistant (like [Claude](https://claude.ai/) or [GPT-4](https://openai.com/gpt-4) with an MCP plugin) or any app that speaks the MCP protocol. The client sends JSON-RPC requests to invoke tools (e.g. get_submissions) and receives JSON results.
+- 🔸 **MCP Client**: Could be an AI assistant (like [Claude](https://claude.ai/) or other MCP-compatible tools) or any app that speaks the MCP protocol. The client sends JSON-RPC requests to invoke tools and receives JSON results.
 
-- 🔸 **MCP Server (SEC EDGAR MCP)**: This server (the project you are reading about) defines the EDGAR tools and handles incoming tool requests. When a request comes in, the server uses the [secedgar Python SDK](https://github.com/sec-edgar/sec-edgar) to call the SEC EDGAR REST API and then returns the response back over MCP.
+- 🔸 **MCP Server (SEC EDGAR MCP)**: This server defines comprehensive EDGAR tools and handles incoming requests. It features:
+  - **Company Tools**: CIK lookup, company information, and company facts
+  - **Filing Tools**: Recent filings, filing content, 8-K analysis, and section extraction
+  - **Financial Tools**: Financial statements with direct XBRL parsing for exact precision
+  - **Insider Trading Tools**: Form 3/4/5 analysis with detailed transaction data
 
-- 🔸 **SEC EDGAR REST API**: The official SEC endpoint ([data.sec.gov](https://data.sec.gov/)) that provides EDGAR data in JSON format. The secedgar library communicates with this REST API, abiding by its [usage policies](https://www.sec.gov/developer) (including rate limits and user agent identification).
+- 🔸 **EDGAR Data Sources**: The server uses the [edgartools Python library](https://github.com/dgunning/edgartools) to access:
+  - **SEC EDGAR REST API**: Official SEC endpoint for company data and filing metadata
+  - **Direct XBRL Parsing**: Extracts financial data directly from SEC filings using regex patterns for exact numeric precision
+  - **Filing Content**: Downloads and parses complete SEC filing documents (.txt format)
 
-**How it works**: The MCP client first queries the server's tool list (discovering functions like get_submissions, etc.). The AI can then decide to call a tool by name with appropriate parameters. The server receives the tools/call request, executes the corresponding EDGAR API call via secedgar, and returns the data. This response is sent back to the AI client in a structured JSON format that the AI can read and incorporate into its answer or reasoning.
+**Key Features**:
+- **Deterministic Responses**: All tools include strict instructions to prevent AI hallucination and ensure responses are based only on SEC filing data
+- **Exact Precision**: Financial data maintains exact numeric precision (no rounding) as filed with the SEC
+- **Filing References**: Every response includes clickable SEC URLs for independent verification
+- **Flexible XBRL Extraction**: Uses pattern matching to find financial concepts without hardcoded mappings
 
-In essence, SEC EDGAR MCP bridges the gap between natural language questions and the raw SEC filings data. By adhering to MCP, it standardizes the way AI models can fetch real-world financial data, using officially sourced information for accurate and up-to-date answers.
+**How it works**: The MCP client discovers available tools (company lookup, financial statements, insider transactions, etc.). When invoked, each tool fetches data from SEC sources, applies deterministic processing rules, and returns structured JSON with filing references. This ensures AI responses are accurate, verifiable, and based solely on official SEC data.
 
 ## References 📚
 
@@ -467,7 +83,7 @@ In essence, SEC EDGAR MCP bridges the gap between natural language questions and
 
 - **[Model Context Protocol (MCP)](https://modelcontextprotocol.io/)** – Official documentation and SDKs. ModelContextProtocol.io – An open standard for connecting LLMs to tools.
 
-- **[SEC EDGAR API Python SDK (secedgar)](https://github.com/sec-edgar/sec-edgar)** – An unofficial Python wrapper for SEC's EDGAR REST API. [GitHub repo](https://github.com/sec-edgar/sec-edgar), [Documentation](https://sec-edgar.github.io/sec-edgar/).
+- **[EdgarTools](https://github.com/dgunning/edgartools)** – A modern Python library for accessing SEC EDGAR data with powerful filing analysis capabilities. [GitHub repo](https://github.com/dgunning/edgartools), [Documentation](https://dgunning.github.io/edgartools/).
 
 
 ## License ⚖️
