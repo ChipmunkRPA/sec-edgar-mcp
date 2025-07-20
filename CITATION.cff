@@ -4,6 +4,6 @@ authors:
   - family-names: Amorelli
     given-names: Stefano
 title: "SEC EDGAR MCP (Model Context Protocol) Server"
-version: 0.1.0
+version: 1.0.0-alpha
 date-released: 2025-04-06
 url: https://github.com/stefanoamorelli/sec-edgar-mcp

@@ -4,7 +4,7 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "sec-edgar-mcp"
-version = "0.2.0"
+version = "1.0.0-alpha"
 description = "SEC EDGAR MCP server for company filings and financial data"
 authors = [{ name = "Stefano Amorelli", email = "stefano@amorelli.tech" }]
 readme = "README.md"
@@ -17,8 +17,7 @@ classifiers = [
 ]
 dependencies = [
   "mcp[cli]>=1.7.1",
-  "secedgar==0.6.0a0",
-  "beautifulsoup4>=4.12.0",
+  "edgartools>=4.4.0",
   "requests>=2.31.0",
 ]
 
