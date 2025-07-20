@@ -49,10 +49,10 @@ insider_tools = InsiderTools()
 def get_cik_by_ticker(ticker: str):
     """
     Get the CIK (Central Index Key) for a company based on its ticker symbol.
-    
+
     Args:
         ticker: The ticker symbol of the company (e.g., "NVDA", "AAPL")
-    
+
     Returns:
         Dictionary containing the CIK number or error message
     """
@@ -63,16 +63,16 @@ def get_cik_by_ticker(ticker: str):
 def get_company_info(identifier: str):
     """
     Get detailed information about a company from SEC records.
-    
+
     CRITICAL INSTRUCTIONS FOR LLM RESPONSES:
     - ONLY use data returned from SEC records. NEVER add external information.
     - ALWAYS include any filing reference information if provided.
     - Be completely deterministic - same query should always give same response.
     - If information is not in SEC records, say "Not available in SEC records".
-    
+
     Args:
         identifier: Company ticker symbol or CIK number
-    
+
     Returns:
         Dictionary containing company information from SEC records including name, CIK, SIC, exchange, etc.
     """
@@ -83,11 +83,11 @@ def get_company_info(identifier: str):
 def search_companies(query: str, limit: int = 10):
     """
     Search for companies by name.
-    
+
     Args:
         query: Search query for company name
         limit: Maximum number of results to return (default: 10)
-    
+
     Returns:
         Dictionary containing list of matching companies
     """
@@ -98,10 +98,10 @@ def search_companies(query: str, limit: int = 10):
 def get_company_facts(identifier: str):
     """
     Get company facts and key financial metrics.
-    
+
     Args:
         identifier: Company ticker symbol or CIK number
-    
+
     Returns:
         Dictionary containing available financial metrics
     """
@@ -110,21 +110,16 @@ def get_company_facts(identifier: str):
 
 # Filing Tools
 @mcp.tool("get_recent_filings")
-def get_recent_filings(
-    identifier: str = None,
-    form_type: str = None,
-    days: int = 30,
-    limit: int = 50
-):
+def get_recent_filings(identifier: str = None, form_type: str = None, days: int = 30, limit: int = 50):
     """
     Get recent SEC filings for a company or across all companies.
-    
+
     Args:
         identifier: Company ticker/CIK (optional, if not provided returns all recent filings)
         form_type: Specific form type to filter (e.g., "10-K", "10-Q", "8-K")
         days: Number of days to look back (default: 30)
         limit: Maximum number of filings to return (default: 50)
-    
+
     Returns:
         Dictionary containing list of recent filings
     """
@@ -135,11 +130,11 @@ def get_recent_filings(
 def get_filing_content(identifier: str, accession_number: str):
     """
     Get the content of a specific SEC filing.
-    
+
     Args:
         identifier: Company ticker symbol or CIK number
         accession_number: The accession number of the filing
-    
+
     Returns:
         Dictionary containing filing content and metadata
     """
@@ -150,11 +145,11 @@ def get_filing_content(identifier: str, accession_number: str):
 def analyze_8k(identifier: str, accession_number: str):
     """
     Analyze an 8-K filing for specific events and items.
-    
+
     Args:
         identifier: Company ticker symbol or CIK number
         accession_number: The accession number of the 8-K filing
-    
+
     Returns:
         Dictionary containing analysis of 8-K items and events
     """
@@ -162,19 +157,15 @@ def analyze_8k(identifier: str, accession_number: str):
 
 
 @mcp.tool("get_filing_sections")
-def get_filing_sections(
-    identifier: str,
-    accession_number: str,
-    form_type: str
-):
+def get_filing_sections(identifier: str, accession_number: str, form_type: str):
     """
     Get specific sections from a filing (e.g., business description, risk factors, MD&A).
-    
+
     Args:
         identifier: Company ticker symbol or CIK number
         accession_number: The accession number of the filing
         form_type: The type of form (e.g., "10-K", "10-Q")
-    
+
     Returns:
         Dictionary containing available sections from the filing
     """
@@ -190,7 +181,7 @@ def get_financials(identifier: str, statement_type: str = "all"):
     - Income statement, revenue, net income, earnings, profit/loss, operating income
     - Balance sheet, assets, liabilities, equity, cash and cash equivalents
     - Any financial statement data or financial metrics
-    
+
     CRITICAL INSTRUCTIONS FOR LLM RESPONSES:
     - ONLY use data from the returned SEC filing. NEVER add external information.
     - ALWAYS include the filing reference information with clickable SEC URL in your response.
@@ -199,11 +190,11 @@ def get_financials(identifier: str, statement_type: str = "all"):
     - ALWAYS state the exact filing date and form type when presenting data.
     - Be completely deterministic - same query should always give same response.
     - If data is not in the filing, say "Not available in this filing" - DO NOT guess.
-    
+
     Args:
         identifier: Company ticker symbol or CIK number
         statement_type: Type of statement ("income", "balance", "cash", or "all")
-    
+
     Returns:
         Dictionary containing financial statement data extracted directly from SEC EDGAR filings,
         including filing_reference with source URLs and disclaimer.
@@ -215,11 +206,11 @@ def get_financials(identifier: str, statement_type: str = "all"):
 def get_segment_data(identifier: str, segment_type: str = "geographic"):
     """
     Get revenue breakdown by segments (geographic, product, etc.).
-    
+
     Args:
         identifier: Company ticker symbol or CIK number
         segment_type: Type of segment analysis (default: "geographic")
-    
+
     Returns:
         Dictionary containing segment revenue data
     """
@@ -230,11 +221,11 @@ def get_segment_data(identifier: str, segment_type: str = "geographic"):
 def get_key_metrics(identifier: str, metrics: list = None):
     """
     Get key financial metrics for a company.
-    
+
     Args:
         identifier: Company ticker symbol or CIK number
         metrics: List of specific metrics to retrieve (optional)
-    
+
     Returns:
         Dictionary containing requested financial metrics
     """
@@ -242,21 +233,16 @@ def get_key_metrics(identifier: str, metrics: list = None):
 
 
 @mcp.tool("compare_periods")
-def compare_periods(
-    identifier: str,
-    metric: str,
-    start_year: int,
-    end_year: int
-):
+def compare_periods(identifier: str, metric: str, start_year: int, end_year: int):
     """
     Compare a financial metric across different time periods.
-    
+
     Args:
         identifier: Company ticker symbol or CIK number
         metric: The financial metric to compare (e.g., "Revenues", "NetIncomeLoss")
         start_year: Starting year for comparison
         end_year: Ending year for comparison
-    
+
     Returns:
         Dictionary containing period comparison data and growth analysis
     """
@@ -267,11 +253,11 @@ def compare_periods(
 def discover_company_metrics(identifier: str, search_term: str = None):
     """
     Discover available financial metrics for a company.
-    
+
     Args:
         identifier: Company ticker symbol or CIK number
         search_term: Optional search term to filter metrics
-    
+
     Returns:
         Dictionary containing list of available metrics
     """
@@ -279,19 +265,14 @@ def discover_company_metrics(identifier: str, search_term: str = None):
 
 
 @mcp.tool("get_xbrl_concepts")
-def get_xbrl_concepts(
-    identifier: str,
-    accession_number: str = None,
-    concepts: list = None,
-    form_type: str = "10-K"
-):
+def get_xbrl_concepts(identifier: str, accession_number: str = None, concepts: list = None, form_type: str = "10-K"):
     """
-    ADVANCED TOOL: Extract specific XBRL concepts from a filing. 
-    
+    ADVANCED TOOL: Extract specific XBRL concepts from a filing.
+
     DO NOT USE for general financial data requests. Use get_financials() instead for:
     - Cash flow statements, income statements, balance sheets
     - Revenue, net income, assets, liabilities, cash data
-    
+
     CRITICAL INSTRUCTIONS FOR LLM RESPONSES:
     - ONLY report values found in the specific SEC filing. NEVER add context from other sources.
     - ALWAYS include the filing reference information with clickable SEC URL (date, accession number, SEC URL).
@@ -300,13 +281,13 @@ def get_xbrl_concepts(
     - ALWAYS specify the exact period/context for each value from the filing.
     - Be completely deterministic - identical queries must give identical responses.
     - If a concept is not found in the filing, state "Not found in this filing" - DO NOT guess.
-    
+
     Args:
         identifier: Company ticker symbol or CIK number
         accession_number: Optional specific filing accession number
         concepts: Optional list of specific concepts to extract (e.g., ["Revenues", "Assets"])
         form_type: Form type if no accession number provided (default: "10-K")
-    
+
     Returns:
         Dictionary containing extracted XBRL concepts with filing_reference and source URLs.
     """
@@ -315,20 +296,17 @@ def get_xbrl_concepts(
 
 @mcp.tool("discover_xbrl_concepts")
 def discover_xbrl_concepts(
-    identifier: str,
-    accession_number: str = None,
-    form_type: str = "10-K",
-    namespace_filter: str = None
+    identifier: str, accession_number: str = None, form_type: str = "10-K", namespace_filter: str = None
 ):
     """
     Discover all available XBRL concepts in a filing, including company-specific ones.
-    
+
     Args:
         identifier: Company ticker symbol or CIK number
         accession_number: Optional specific filing accession number
         form_type: Form type if no accession number provided (default: "10-K")
         namespace_filter: Optional filter to show only concepts from specific namespace
-    
+
     Returns:
         Dictionary containing all discovered XBRL concepts, namespaces, and company-specific tags
     """
@@ -337,15 +315,10 @@ def discover_xbrl_concepts(
 
 # Insider Trading Tools
 @mcp.tool("get_insider_transactions")
-def get_insider_transactions(
-    identifier: str,
-    form_types: list = None,
-    days: int = 90,
-    limit: int = 50
-):
+def get_insider_transactions(identifier: str, form_types: list = None, days: int = 90, limit: int = 50):
     """
     Get insider trading transactions for a company from SEC filings.
-    
+
     CRITICAL INSTRUCTIONS FOR LLM RESPONSES:
     - ONLY use data from the returned SEC insider filings. NEVER add external information.
     - ALWAYS include the filing reference information with clickable SEC URLs in your response.
@@ -354,13 +327,13 @@ def get_insider_transactions(
     - ALWAYS specify the exact filing date and accession number for each transaction.
     - Be completely deterministic - same query should always give same response.
     - If data is not in the filing, say "Not available in this filing" - DO NOT guess.
-    
+
     Args:
         identifier: Company ticker symbol or CIK number
         form_types: List of form types to include (default: ["3", "4", "5"])
         days: Number of days to look back (default: 90)
         limit: Maximum number of transactions to return (default: 50)
-    
+
     Returns:
         Dictionary containing insider transactions with direct SEC URLs for verification
     """
@@ -371,18 +344,18 @@ def get_insider_transactions(
 def get_insider_summary(identifier: str, days: int = 180):
     """
     Get a summary of insider trading activity for a company from SEC filings.
-    
+
     CRITICAL INSTRUCTIONS FOR LLM RESPONSES:
     - ONLY use data from the returned SEC insider filings. NEVER add external information.
     - ALWAYS include the filing reference information with SEC URLs in your response.
     - PRESERVE EXACT COUNTS AND DATES - NO ROUNDING OR ESTIMATES!
     - Be completely deterministic - same query should always give same response.
     - If data is not in the filing, say "Not available in filings" - DO NOT guess.
-    
+
     Args:
         identifier: Company ticker symbol or CIK number
         days: Number of days to analyze (default: 180)
-    
+
     Returns:
         Dictionary containing insider trading summary from SEC filings
     """
@@ -393,11 +366,11 @@ def get_insider_summary(identifier: str, days: int = 180):
 def get_form4_details(identifier: str, accession_number: str):
     """
     Get detailed information from a specific Form 4 filing.
-    
+
     Args:
         identifier: Company ticker symbol or CIK number
         accession_number: The accession number of the Form 4
-    
+
     Returns:
         Dictionary containing detailed Form 4 information
     """
@@ -405,18 +378,14 @@ def get_form4_details(identifier: str, accession_number: str):
 
 
 @mcp.tool("analyze_form4_transactions")
-def analyze_form4_transactions(
-    identifier: str,
-    days: int = 90,
-    limit: int = 50
-):
+def analyze_form4_transactions(identifier: str, days: int = 90, limit: int = 50):
     """
-    Analyze Form 4 filings and extract detailed transaction data including insider names, 
+    Analyze Form 4 filings and extract detailed transaction data including insider names,
     transaction amounts, share counts, prices, and ownership details.
-    
+
     USE THIS TOOL when users ask for detailed insider transaction analysis, transaction tables,
     or specific transaction amounts from Form 4 filings.
-    
+
     CRITICAL INSTRUCTIONS FOR LLM RESPONSES:
     - ONLY use data from the returned SEC Form 4 filings. NEVER add external information.
     - ALWAYS include the filing reference information with clickable SEC URLs.
@@ -425,12 +394,12 @@ def analyze_form4_transactions(
     - Present data in table format when requested by users.
     - Be completely deterministic - same query should always give same response.
     - If data is not in the filing, say "Not available in this filing" - DO NOT guess.
-    
+
     Args:
         identifier: Company ticker symbol or CIK number
         days: Number of days to look back (default: 90)
         limit: Maximum number of filings to analyze (default: 50)
-    
+
     Returns:
         Dictionary containing detailed Form 4 transaction analysis with exact values from SEC filings
     """
@@ -441,11 +410,11 @@ def analyze_form4_transactions(
 def analyze_insider_sentiment(identifier: str, months: int = 6):
     """
     Analyze insider trading sentiment and trends over time.
-    
+
     Args:
         identifier: Company ticker symbol or CIK number
         months: Number of months to analyze (default: 6)
-    
+
     Returns:
         Dictionary containing sentiment analysis and trends
     """
@@ -457,105 +426,78 @@ def analyze_insider_sentiment(identifier: str, months: int = 6):
 def get_recommended_tools(form_type: str):
     """
     Get recommended tools for analyzing specific form types.
-    
+
     Args:
         form_type: The SEC form type (e.g., "10-K", "8-K", "4")
-    
+
     Returns:
         Dictionary containing recommended tools and usage tips
     """
     recommendations = {
         "10-K": {
-            "tools": [
-                "get_financials",
-                "get_filing_sections",
-                "get_segment_data",
-                "get_key_metrics"
-            ],
+            "tools": ["get_financials", "get_filing_sections", "get_segment_data", "get_key_metrics"],
             "description": "Annual report with comprehensive business and financial information",
             "tips": [
                 "Use get_financials to extract financial statements",
                 "Use get_filing_sections to read business description and risk factors",
-                "Use get_segment_data for geographic/product revenue breakdown"
-            ]
+                "Use get_segment_data for geographic/product revenue breakdown",
+            ],
         },
         "10-Q": {
-            "tools": [
-                "get_financials",
-                "get_filing_sections",
-                "compare_periods"
-            ],
+            "tools": ["get_financials", "get_filing_sections", "compare_periods"],
             "description": "Quarterly report with unaudited financial statements",
             "tips": [
                 "Use get_financials for quarterly financial data",
-                "Use compare_periods to analyze quarter-over-quarter trends"
-            ]
+                "Use compare_periods to analyze quarter-over-quarter trends",
+            ],
         },
         "8-K": {
-            "tools": [
-                "analyze_8k",
-                "get_filing_content"
-            ],
+            "tools": ["analyze_8k", "get_filing_content"],
             "description": "Current report for material events",
             "tips": [
                 "Use analyze_8k to identify specific events reported",
-                "Check for press releases and material agreements"
-            ]
+                "Check for press releases and material agreements",
+            ],
         },
         "4": {
             "tools": [
                 "get_insider_transactions",
                 "analyze_form4_transactions",
                 "get_form4_details",
-                "analyze_insider_sentiment"
+                "analyze_insider_sentiment",
             ],
             "description": "Statement of changes in beneficial ownership",
             "tips": [
                 "Use get_insider_transactions for recent trading activity overview",
                 "Use analyze_form4_transactions for detailed transaction analysis and tables",
-                "Use analyze_insider_sentiment to understand trading patterns"
-            ]
+                "Use analyze_insider_sentiment to understand trading patterns",
+            ],
         },
         "DEF 14A": {
-            "tools": [
-                "get_filing_content",
-                "get_filing_sections"
-            ],
+            "tools": ["get_filing_content", "get_filing_sections"],
             "description": "Proxy statement with executive compensation and governance",
-            "tips": [
-                "Look for executive compensation tables",
-                "Review shareholder proposals and board information"
-            ]
-        }
+            "tips": ["Look for executive compensation tables", "Review shareholder proposals and board information"],
+        },
     }
-    
+
     form_type_upper = form_type.upper()
     if form_type_upper in recommendations:
-        return {
-            "success": True,
-            "form_type": form_type_upper,
-            "recommendations": recommendations[form_type_upper]
-        }
+        return {"success": True, "form_type": form_type_upper, "recommendations": recommendations[form_type_upper]}
     else:
         return {
             "success": True,
             "form_type": form_type_upper,
             "message": "No specific recommendations available for this form type",
-            "general_tools": [
-                "get_filing_content",
-                "get_recent_filings"
-            ]
+            "general_tools": ["get_filing_content", "get_recent_filings"],
         }
 
 
 def main():
     """Main entry point for the MCP server."""
-    parser = argparse.ArgumentParser(
-        description="SEC EDGAR MCP Server - Access SEC filings and financial data"
-    )
+    parser = argparse.ArgumentParser(description="SEC EDGAR MCP Server - Access SEC filings and financial data")
     parser.add_argument("--transport", default="stdio", help="Transport method")
     args = parser.parse_args()
-    
+
     # Run the MCP server
     mcp.run(transport=args.transport)
 
