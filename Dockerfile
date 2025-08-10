@@ -21,7 +21,7 @@ ENV PYTHONPATH=/app
 #       "--rm",
 #       "-i",
 #       "-e", "SEC_EDGAR_USER_AGENT=<First Name, Last name (your@email.com)>",
-#       "stefanoamorelli/nasdaq-data-link-mcp:latest"
+#       "stefanoamorelli/sec-edgar-mcp:latest"
 #     ]
 #   }
 # }
