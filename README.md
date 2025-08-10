@@ -5,7 +5,7 @@
 </div>
 
 <p align="center">
-  <img alt="License: MIT" src="https://img.shields.io/badge/license-MIT-blue.svg" />
+  <img alt="License: AGPL-3.0" src="https://img.shields.io/badge/license-AGPL--3.0-blue.svg" />
   <img alt="Python: 3.9+" src="https://img.shields.io/badge/python-3.9+-brightgreen.svg" />
   <img alt="Platform: Windows | Mac | Linux" src="https://img.shields.io/badge/platform-Windows%20%7C%20Mac%20%7C%20Linux-lightgrey.svg" />
   <img alt="Build Status" src="https://img.shields.io/badge/build-passing-brightgreen.svg" />
@@ -88,9 +88,15 @@ The SEC EDGAR MCP server acts as a middleman between an AI (MCP client) and the 
 
 ## License ⚖️
 
-This project is licensed under the [MIT License](LICENSE). You are free to use, modify, and distribute it. See the LICENSE file for details.
+This open-source project is licensed under the [GNU Affero General Public License v3.0 (AGPL-3.0)](LICENSE). This means:
+- You can use, modify, and distribute this software
+- If you modify and distribute it, you must release your changes under AGPL-3.0
+- If you run a modified version on a server, you must provide the source code to users
+- See the LICENSE file for full details
+
+For commercial licensing options or other licensing inquiries, please contact stefano@amorelli.tech.
 
 ---
 
-© 2025 [Stefano Amorelli](https://amorelli.tech) – Released under the [MIT license](LICENSE).  Enjoy! 🎉
+© 2025 [Stefano Amorelli](https://amorelli.tech) – Released under the [GNU Affero General Public License v3.0](LICENSE).  Enjoy! 🎉
 

@@ -33,7 +33,7 @@ about:
   description: |
     Provides access to SEC EDGAR database through a Model Context Protocol (MCP) server.
     Created by Stefano Amorelli.
-  license: MIT
+  license: AGPL-3.0
   license_file: LICENSE
 
 extra:
