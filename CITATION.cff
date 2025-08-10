@@ -3,6 +3,7 @@ message: "If you use this software in your research or work, please cite it as f
 authors:
   - family-names: Amorelli
     given-names: Stefano
+    orcid: "https://orcid.org/0009-0004-4917-0999"
 title: "SEC EDGAR MCP (Model Context Protocol) Server"
 version: 1.0.0-alpha
 date-released: 2025-04-06
