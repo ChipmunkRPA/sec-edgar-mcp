@@ -77,6 +77,10 @@ The SEC EDGAR MCP server acts as a middleman between an AI (MCP client) and the 
 
 **How it works**: The MCP client discovers available tools (company lookup, financial statements, insider transactions, etc.). When invoked, each tool fetches data from SEC sources, applies deterministic processing rules, and returns structured JSON with filing references. This ensures AI responses are accurate, verifiable, and based solely on official SEC data.
 
+## Integrations
+
+In its current form, the MCP server is configured to use the [stdio](https://modelcontextprotocol.io/specification/2025-03-26/basic/transports#stdio) transport. Integrations with platforms such as [Dify](https://dify.ai) will require switching to [streamable HTTP](https://modelcontextprotocol.io/specification/2025-03-26/basic/transports#streamable-http), or possibly [SSE](https://modelcontextprotocol.io/specification/2024-11-05/basic/transports#http-with-sse) depending on the required [backwards compatibility](https://modelcontextprotocol.io/specification/2025-03-26/basic/transports#backwards-compatibility)). This can be done by passing a different `--transport` argument to `server.py`. However, it may also require editing `server.py`, because other arguments such as `host` may need to be passed to the FastMCP constructor.
+
 ## References 📚
 
 - **[SEC EDGAR](https://www.sec.gov/edgar)** – About EDGAR, SEC.gov (2024). EDGAR is the SEC's database for electronic company filings.
