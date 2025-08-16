@@ -162,7 +162,7 @@ class FilingsTools:
             if hasattr(eightk, "has_press_release"):
                 analysis["has_press_release"] = eightk.has_press_release
                 if eightk.has_press_release and hasattr(eightk, "press_releases"):
-                    analysis["press_releases"] = [pr.title for pr in eightk.press_releases[:3]]
+                    analysis["press_releases"] = [pr for pr in list(eightk.press_releases)[:3]]
 
             return {"success": True, "analysis": analysis}
         except Exception as e:
