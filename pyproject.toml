@@ -9,7 +9,7 @@ description = "SEC EDGAR MCP server for company filings and financial data"
 authors = [{ name = "Stefano Amorelli", email = "stefano@amorelli.tech" }]
 readme = "README.md"
 requires-python = ">=3.11"
-license = { file = "LICENSE" }
+license = { text = "AGPL-3.0" }
 classifiers = [
   "Programming Language :: Python :: 3",
   "License :: OSI Approved :: GNU Affero General Public License v3",
@@ -21,8 +21,9 @@ dependencies = [
   "requests>=2.31.0",
 ]
 
-[tool.setuptools]
-packages = ["sec_edgar_mcp"]
+[tool.setuptools.packages.find]
+where = ["."]
+include = ["sec_edgar_mcp*"]
 
 [project.urls]
 "Homepage" = "https://github.com/stefanoamorelli/sec-edgar-mcp"
