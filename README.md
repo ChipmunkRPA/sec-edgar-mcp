@@ -91,6 +91,14 @@ In its current form, the MCP server is configured to use the [stdio](https://mod
 - **[EdgarTools](https://github.com/dgunning/edgartools)** – A modern Python library for accessing SEC EDGAR data with powerful filing analysis capabilities. [GitHub repo](https://github.com/dgunning/edgartools), [Documentation](https://dgunning.github.io/edgartools/).
 
 
+## Contributors 🤝
+
+A big thank you to all the contributors who have helped make this project better!
+
+<a href="https://github.com/stefanoamorelli/sec-edgar-mcp/graphs/contributors">
+  <img src="https://contrib.rocks/image?repo=stefanoamorelli/sec-edgar-mcp" />
+</a>
+
 ## License ⚖️
 
 This open-source project is licensed under the [GNU Affero General Public License v3.0 (AGPL-3.0)](LICENSE). This means:
