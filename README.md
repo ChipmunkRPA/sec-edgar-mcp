@@ -6,10 +6,11 @@
 
 <p align="center">
   <img alt="License: AGPL-3.0" src="https://img.shields.io/badge/license-AGPL--3.0-blue.svg" />
-  <img alt="Python: 3.9+" src="https://img.shields.io/badge/python-3.9+-brightgreen.svg" />
+  <img alt="Python: 3.11+" src="https://img.shields.io/badge/python-3.11+-brightgreen.svg" />
   <img alt="Platform: Windows | Mac | Linux" src="https://img.shields.io/badge/platform-Windows%20%7C%20Mac%20%7C%20Linux-lightgrey.svg" />
   <img alt="Build Status" src="https://img.shields.io/badge/build-passing-brightgreen.svg" />
   <a href="https://pypi.org/project/sec-edgar-mcp/"><img alt="PyPI" src="https://img.shields.io/pypi/v/sec-edgar-mcp.svg" /></a>
+  <a href="https://anaconda.org/stefanoamorelli/sec-edgar-mcp"><img alt="Conda Version" src="https://img.shields.io/conda/vn/stefanoamorelli/sec-edgar-mcp.svg" /></a>
   <a href="https://mseep.ai/app/0132880c-5e83-410b-a1d5-d3df08ed7b5c"><img alt="Verified on MseeP" src="https://mseep.ai/badge.svg" /></a>
 </p>
 
