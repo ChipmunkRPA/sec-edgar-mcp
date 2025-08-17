@@ -1,5 +1,5 @@
 {% set name = "sec-edgar-mcp" %}
-{% set version = environ.get('GIT_DESCRIBE_TAG', '1.0.2').lstrip('v') %}
+{% set version = environ.get('GIT_DESCRIBE_TAG', '1.0.3').lstrip('v') %}
 
 package:
   name: {{ name|lower }}
@@ -11,9 +11,7 @@ source:
 build:
   noarch: python
   number: 0
-  script: |
-    {{ PYTHON }} -m pip install . -vv
-    {{ PYTHON }} -m pip install mcp[cli]>=1.7.1 edgartools>=4.4.0
+  script: {{ PYTHON }} -m pip install . -vv --no-deps --ignore-installed --no-cache-dir
 
 requirements:
   host:
@@ -35,6 +33,10 @@ about:
   description: |
     Provides access to SEC EDGAR database through a Model Context Protocol (MCP) server.
     Created by Stefano Amorelli.
+    
+    Note: This package will automatically install additional dependencies
+    (mcp and edgartools) via pip during installation, as they are not 
+    yet available on conda-forge.
   license: AGPL-3.0
   license_file: LICENSE
 
