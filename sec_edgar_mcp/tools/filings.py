@@ -133,7 +133,9 @@ class FilingsTools:
             eightk = filing.obj()
 
             analysis: Dict[str, Any] = {
-                "date_of_report": datetime.strptime(eightk.date_of_report, "%B %d, %Y").isoformat() if hasattr(eightk, "date_of_report") else None,
+                "date_of_report": datetime.strptime(eightk.date_of_report, "%B %d, %Y").isoformat()
+                if hasattr(eightk, "date_of_report")
+                else None,
                 "items": getattr(eightk, "items", []),
                 "events": {},
             }
