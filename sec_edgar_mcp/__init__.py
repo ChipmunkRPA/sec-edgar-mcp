@@ -2,7 +2,7 @@ from sec_edgar_mcp.core import EdgarClient, CompanyInfo, FilingInfo, Transaction
 from sec_edgar_mcp.tools import CompanyTools, FilingsTools, FinancialTools, InsiderTools
 from sec_edgar_mcp.utils import TickerCache, SEC_USER_AGENT
 
-__version__ = "1.0.0-alpha"
+__version__ = "1.0.1"
 
 __all__ = [
     # Core
