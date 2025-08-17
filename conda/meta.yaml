@@ -1,5 +1,5 @@
 {% set name = "sec-edgar-mcp" %}
-{% set version = environ.get('GIT_DESCRIBE_TAG', '1.0.1').lstrip('v') %}
+{% set version = environ.get('GIT_DESCRIBE_TAG', '1.0.2').lstrip('v') %}
 
 package:
   name: {{ name|lower }}
@@ -11,7 +11,9 @@ source:
 build:
   noarch: python
   number: 0
-  script: {{ PYTHON }} -m pip install . -vv
+  script: |
+    {{ PYTHON }} -m pip install . -vv
+    {{ PYTHON }} -m pip install mcp[cli]>=1.7.1 edgartools>=4.4.0
 
 requirements:
   host:
@@ -20,8 +22,7 @@ requirements:
     - setuptools >=61.0
   run:
     - python >=3.11
-    - mcp-cli >=1.7.1
-    - edgartools >=4.4.0
+    - pip
     - requests >=2.31.0
 
 test:
