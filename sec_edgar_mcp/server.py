@@ -160,7 +160,10 @@ def get_filing_sections(identifier: str, accession_number: str, form_type: str):
         form_type: Form type ("10-K" or "10-Q")
 
     Returns:
-        Extracted sections including business description, risk factors, and MD&A.
+        Section data using contract v2:
+        - sections: backward-compatible summary keys (business/risk_factors/mda/has_financials)
+        - normalized_sections: ordered section-by-section records with section_key/title/text/offsets
+        - normalized_section_count: number of normalized sections extracted
     """
     return filings_tools.get_filing_sections(identifier, accession_number, form_type)
 

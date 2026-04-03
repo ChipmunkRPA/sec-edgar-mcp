@@ -60,6 +60,22 @@ For other installation methods (pip, conda, uv), see the [documentation](https:/
 
 All responses include SEC filing URLs for verification.
 
+`get_filing_sections` returns:
+- `sections` (backward-compatible summary keys)
+- `normalized_sections` (ordered section-by-section records with deterministic keys and full section text)
+- `contract_version` (`2.0`)
+
+Each `normalized_sections` record includes:
+- `section_key` (raw parsed key, e.g. `partii_item_5`)
+- `canonical_key` (part-agnostic key for matching, e.g. `item_5`)
+- `title`
+- `text`
+- `order`
+- `start_offset` / `end_offset`
+- `char_count`
+- `source`
+- `form_type`
+
 ## HTTP Transport
 
 For platforms like [Dify](https://dify.ai), use streamable HTTP instead of stdio:

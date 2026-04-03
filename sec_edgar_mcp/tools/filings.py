@@ -1,6 +1,7 @@
 """Filing-related tools for SEC EDGAR data."""
 
 from datetime import datetime
+import re
 from typing import Any, Dict, List, Optional, Union
 
 from edgar import get_current_filings
@@ -112,12 +113,20 @@ class FilingsTools(BaseTools):
                 raise FilingNotFoundError(f"Filing {accession_number} not found")
 
             filing_obj = filing.obj()
-            sections = self._extract_sections(filing_obj, form_type)
+            full_text = filing.text()
+            normalized_sections = self._extract_normalized_sections(full_text, form_type)
+            sections = self._extract_sections(filing_obj, form_type, normalized_sections)
             return {
                 "success": True,
                 "form_type": form_type,
+                "accession_number": filing.accession_number,
+                "filing_date": filing.filing_date.isoformat(),
+                "url": filing.url,
+                "contract_version": "2.0",
                 "sections": sections,
                 "available_sections": list(sections.keys()),
+                "normalized_sections": normalized_sections,
+                "normalized_section_count": len(normalized_sections),
             }
         except Exception as e:
             return {"success": False, "error": f"Failed to get filing sections: {e}"}
@@ -178,19 +187,147 @@ class FilingsTools(BaseTools):
 
         return analysis
 
-    def _extract_sections(self, filing_obj, form_type: str) -> Dict[str, Any]:
-        """Extract sections from a filing based on form type."""
+    def _extract_sections(self, filing_obj, form_type: str, normalized_sections: List[Dict[str, Any]]) -> Dict[str, Any]:
+        """Extract compatibility sections from normalized section records."""
         sections: Dict[str, Any] = {}
 
-        if form_type not in ["10-K", "10-Q"]:
-            return sections
-
-        for attr in ["business", "risk_factors", "mda"]:
-            if hasattr(filing_obj, attr):
-                content = str(getattr(filing_obj, attr))
-                sections[attr] = content[:10000]
+        by_key = {str(s.get("section_key", "")): str(s.get("text", "")) for s in normalized_sections}
+        key_candidates = {
+            "business": ["item_1"],
+            "risk_factors": ["item_1a", "partii_item_1a"],
+            "mda": ["item_7", "item_2"],  # 10-K -> Item 7, 10-Q -> Item 2
+        }
+        for out_key, candidates in key_candidates.items():
+            for candidate in candidates:
+                value = by_key.get(candidate, "")
+                if value:
+                    sections[out_key] = value
+                    break
 
         if hasattr(filing_obj, "financials"):
             sections["has_financials"] = True
+        else:
+            sections["has_financials"] = any(
+                "financial statements" in str(s.get("title", "")).lower() for s in normalized_sections
+            )
 
         return sections
+
+    def _extract_normalized_sections(self, content: str, form_type: str) -> List[Dict[str, Any]]:
+        """Extract robust section records from filing text."""
+        if not isinstance(content, str) or not content.strip():
+            return []
+        content = self._preprocess_filing_text(content)
+        if not content.strip():
+            return []
+
+        heading_re = re.compile(
+            r"(?im)^(?P<header>(?:PART\s+[IVXLC]+\s*[,.-]?\s*)?ITEM\s+\d+[A-Z]?(?:\.\d+)?\.[^\n]{0,180}|"
+            r"NOTE\s+\d+[A-Z]?\s*[-.:][^\n]{0,180}|"
+            r"PART\s+[IVXLC]+\b[^\n]{0,120})\s*$"
+        )
+        matches: List[re.Match[str]] = []
+        for match in heading_re.finditer(content):
+            header = match.group("header").strip()
+            if self._is_probable_toc_header(header):
+                continue
+            context_window = content[max(0, match.start() - 240) : match.start()]
+            if "table of contents" in context_window.lower():
+                continue
+            matches.append(match)
+
+        if not matches:
+            return []
+
+        sections: List[Dict[str, Any]] = []
+        for idx, match in enumerate(matches):
+            start = match.start()
+            end = matches[idx + 1].start() if idx + 1 < len(matches) else len(content)
+            header = match.group("header").strip()
+            text = content[start:end].strip()
+            section_key = self._normalize_section_key(header, idx + 1)
+            sections.append(
+                {
+                    "section_key": section_key,
+                    "canonical_key": self._canonical_key_from_header(header, section_key),
+                    "title": header,
+                    "text": text,
+                    "order": idx + 1,
+                    "start_offset": start,
+                    "end_offset": end,
+                    "char_count": len(text),
+                    "source": "filing_text_regex",
+                    "form_type": form_type,
+                }
+            )
+        return sections
+
+    def _is_probable_toc_header(self, header: str) -> bool:
+        """Return True when a heading line likely comes from table of contents artifacts."""
+        h = header.strip()
+        lowered = h.lower()
+        if "annual report on form" in lowered or "incorporated herein" in lowered:
+            return True
+        if re.search(r"\s\d{1,3}\s*$", h):
+            return True
+        if len(h) > 180:
+            return True
+        return False
+
+    def _preprocess_filing_text(self, text: str) -> str:
+        """Normalize ASCII-art filing layouts before heading detection."""
+        cleaned_lines: List[str] = []
+        border_only = re.compile(r"^[\+\-\|=\s\u2500-\u257F_]+$")
+        pipe_wrapped = re.compile(r"^\|\s*(.*?)\s*\|$")
+        page_number_only = re.compile(r"^\d{1,3}$")
+        for raw in text.splitlines():
+            line = raw.rstrip()
+            stripped = line.strip()
+            if not stripped:
+                cleaned_lines.append("")
+                continue
+            if border_only.match(stripped):
+                continue
+            if "table of contents" in stripped.lower():
+                continue
+            if page_number_only.match(stripped):
+                continue
+            m = pipe_wrapped.match(stripped)
+            if m:
+                inner = m.group(1).strip()
+                if inner:
+                    cleaned_lines.append(inner)
+                continue
+            cleaned_lines.append(stripped)
+        return "\n".join(cleaned_lines)
+
+    def _normalize_section_key(self, header: str, order: int) -> str:
+        """Normalize heading text into deterministic section keys."""
+        normalized = re.sub(r"\s+", " ", header).strip().lower()
+        m_part_item = re.search(r"part\s+([ivxlc]+)\s*[,.-]?\s*item\s+(\d+[a-z]?)", normalized)
+        if m_part_item:
+            part = m_part_item.group(1)
+            item = m_part_item.group(2)
+            return f"part{part}_item_{item}"
+        m_item = re.search(r"\bitem\s+(\d+[a-z]?)", normalized)
+        if m_item:
+            return f"item_{m_item.group(1)}"
+        m_note = re.search(r"\bnote\s+(\d+[a-z]?)", normalized)
+        if m_note:
+            return f"footnote_{m_note.group(1)}"
+        m_part = re.search(r"\bpart\s+([ivxlc]+)\b", normalized)
+        if m_part:
+            return f"part_{m_part.group(1)}"
+        safe = re.sub(r"[^a-z0-9]+", "_", normalized).strip("_")
+        return safe if safe else f"section_{order}"
+
+    def _canonical_key_from_header(self, header: str, section_key: str) -> str:
+        """Return a part-agnostic canonical key for deterministic downstream matching."""
+        normalized = re.sub(r"\s+", " ", header).strip().lower()
+        m_item = re.search(r"\bitem\s+(\d+[a-z]?)", normalized)
+        if m_item:
+            return f"item_{m_item.group(1)}"
+        m_note = re.search(r"\bnote\s+(\d+[a-z]?)", normalized)
+        if m_note:
+            return f"footnote_{m_note.group(1)}"
+        return section_key
